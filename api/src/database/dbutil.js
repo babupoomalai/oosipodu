@@ -6,7 +6,7 @@ const query = function (query, params) {
 	console.log("step :0 ");
 	return pool.getConnection(function (err, connection) {
 		if (err) throw err; // not connected!
-		console.log("step :1 ");
+		// console.log("step :1 ");
 		// Use the connection
 		return connection.query(query, params, function (error, results, fields) {
 			// When done with the connection, release it.
@@ -18,7 +18,7 @@ const query = function (query, params) {
 			// console.log("released: " + results[0].id);
 			return results;
 		});
-		console.log("step :3 ");
+		// console.log("step :3 ");
 	});
 }
 module.exports.query = util.promisify(query);

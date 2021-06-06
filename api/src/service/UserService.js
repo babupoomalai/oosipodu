@@ -15,16 +15,18 @@ exports.addUser = async function (mobile, beneficiaries) {
 	let dbUser = await module.exports.getUser(mobile);
 	console.log(`dbUser: ${dbUser}`);
 	if (!dbUser) {
-		await dbutil.query(`INSERT INTO user(name, mobile) values(?, ?)`, [vaccinatedPerson.name, mobile]);
-		dbUser = await module.exports.getUser(mobile);
-		if (dbUser) {
-			await module.exports.updateBeneficiaries(beneficiaries, dbUser.id);
-			return true;
-		}
+		dbutil.query(`INSERT INTO user(name, mobile) values(?, ?)`, [vaccinatedPerson.name, mobile]);
+		console.log('added');
+		// dbUser = await module.exports.getUser(mobile);
+		// console.log('user: ' + JSON.stringify(dbUser))
+		// if (dbUser && !!dbUser.id) {
+		// 	await module.exports.updateBeneficiaries(beneficiaries, dbUser.id);
+		// 	return true;
+		// }
 	} else {
 		console.log("User exists: " + mobile);
 	}
-	return false;
+	return true;
 }
 
 exports.getUser = async function (mobile) {
@@ -33,9 +35,9 @@ exports.getUser = async function (mobile) {
 		return null;
 	}
 
-	const dbUserList = await dbutil.query(`SELECT * from user where mobile = '${mobile}'`);
+	const dbUserList = await dbutil.query(`SELECT u.*, count(b.id) cnt from user u left join beneficiary b on u.id = b.userId where mobile = '${mobile}' and (b.dose1_date is NOT NULL or b.dose2_date is not null)`);
 	console.log("insider UserService getUser: " + dbUserList === null);
-	if (!!dbUserList && dbUserList.length > 0) {
+	if (!!dbUserList && dbUserList.length > 0 && !!dbUserList[0].id) {
 		return dbUserList[0];
 	}
 	return null;

@@ -1,11 +1,11 @@
 var mysql = require('mysql');
 
 const pool = mysql.createPool({
-	host: 'qao3ibsa7hhgecbv.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-	user: 'p41a235bhzcc90jg',
-	password: 'q0wpymc2btta5cg7',
-	database: 'xgyp26hg2huzcr3u',
-	connectTimeout: 1000,
+	host: 'us-cdbr-east-04.cleardb.com',
+	user: 'bf01dca905b259',
+	password: '29a925a4',
+	database: 'heroku_c0cdc2c406b3622',
+	connectTimeout: 5000,
 	connectionLimit: 8
 });
 

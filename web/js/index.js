@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			isVaccinated: function () {
 				const beneficiaries = this.user.beneficiaries || [];
 				return _.find(beneficiaries, person => !_.isEmpty(person.dose1_date) || !_.isEmpty(person.dose2_date)) != null;
+				// return this.user.dbuser.cnt > 0;
 			},
 			beneficiaryIds: function () {
 				return this.user.beneficiaries.map((beneficiary) => beneficiary.beneficiary_reference_id)
@@ -199,11 +200,15 @@ document.addEventListener('DOMContentLoaded', function () {
 					// _.find(beneficiaries, obj => )
 				} else {
 					if (this.isVaccinated) {
-						console.log("Person vaccinated");
+						// console.log("Person vaccinated");
 						if (dbUser == null) {
 							await UserService.addUser(this.mobile, beneficiaries);
-						} else {
-							// this.updateBeneficiaries();
+							const dbUser = await UserService.getUserDetail(this.mobile);
+							this.user.dbUser = dbUser;
+							this.updateBeneficiaries(beneficiaries);
+							// If person newly vaccinated, mark in db
+						} else if (dbUser.cnt != beneficiaries.length) {
+							this.updateBeneficiaries();
 						}
 					}
 				}

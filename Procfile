@@ -1,2 +1,2 @@
-web: node web/index.js
-api: node api/index.js
+web: parcel web/index.html
+api: node api/bin/www
