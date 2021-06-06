@@ -15,7 +15,7 @@ const query = function (query, params) {
 
 			// Handle error after the release.
 			if (error) throw error;
-			console.log("released: " + results[0].id);
+			// console.log("released: " + results[0].id);
 			return results;
 		});
 		console.log("step :3 ");

@@ -21,11 +21,25 @@ router.get("/getDetail", function (req, res, next) {
 })
 
 router.post("/addUser", function (req, res, next) {
-	if (!req.query || !req.query.mobile) {
+	console.log(`inside addUser: ${JSON.stringify(req.body)}`)
+	if (!req.body || !req.body.mobile) {
 		res.status(422);
-		res.render('error', {error: err})
+		res.render('error', {error: "Bad input"})
 	}
-	userService.addUser(req.query.mobile, req.query.beneficiaries);
+	userService.addUser(req.body.mobile, req.body.beneficiaries).then(() => {
+		res.end("success")
+	})
+})
+
+router.post("/updateBeneficiaries", function (req, res, next) {
+	console.log(`inside updateBeneficiaries: ${JSON.stringify(req.body)}`)
+	if (!req.body || !req.body.userId) {
+		res.status(422);
+		res.render('error', {error: "Bad input"})
+	}
+	userService.updateBeneficiaries(req.body.beneficiaries, req.body.userId).then(() => {
+		res.end("success")
+	})
 })
 
 

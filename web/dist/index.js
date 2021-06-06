@@ -117,216 +117,74 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"js/api.js":[function(require,module,exports) {
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+})({"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
 
-// import jquery from "jquery";
-// export default (window.$ = window.jQuery = jquery);
-var baseURL = 'https://cdn-api.co-vin.in/api/v2';
+  return bundleURL;
+}
 
-var sha256 =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(message) {
-    var msgUint8, hashBuffer, hashArray, hashHex;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            msgUint8 = new TextEncoder().encode(message);
-            _context.next = 3;
-            return crypto.subtle.digest('SHA-256', msgUint8);
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
 
-          case 3:
-            hashBuffer = _context.sent;
-            hashArray = Array.from(new Uint8Array(hashBuffer));
-            hashHex = hashArray.map(function (b) {
-              return b.toString(16).padStart(2, '0');
-            }).join('');
-            return _context.abrupt("return", hashHex);
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
 
-          case 7:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
+  return '/';
+}
 
-  return function sha256(_x) {
-    return _ref.apply(this, arguments);
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
   };
-}();
 
-exports.sendOTP =
-/*#__PURE__*/
-function () {
-  var _ref2 = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee2(mobile) {
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            // const mobile = $('#mobileNo').val();
-            $('#alert').text('OTP successfully sent to ' + mobile);
-            $('#alertPanel').removeAttr('style');
-            $('#validatePanel').removeAttr('style');
-            return _context2.abrupt("return", fetch("".concat(baseURL, "/auth/generateMobileOTP"), {
-              method: 'post',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                mobile: mobile,
-                secret: 'U2FsdGVkX19mD56KTNfQsZgXJMwOG7u/6tuj0Qvil1LEjx783oxHXGUTDWYm+XMYVGXPeu+a24sl5ndEKcLTUQ=='
-              })
-            }));
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
 
-          case 4:
-          case "end":
-            return _context2.stop();
-        }
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
       }
-    }, _callee2);
-  }));
+    }
 
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}();
+    cssTimeout = null;
+  }, 50);
+}
 
-exports.validateOTP =
-/*#__PURE__*/
-function () {
-  var _ref3 = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee3(id, otp) {
-    var response;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.t0 = fetch;
-            _context3.t1 = "".concat(baseURL, "/auth/validateMobileOtp");
-            _context3.t2 = {
-              'Content-Type': 'application/json'
-            };
-            _context3.t3 = JSON;
-            _context3.t4 = id;
-            _context3.next = 7;
-            return sha256(otp);
-
-          case 7:
-            _context3.t5 = _context3.sent;
-            _context3.t6 = {
-              txnId: _context3.t4,
-              otp: _context3.t5
-            };
-            _context3.t7 = _context3.t3.stringify.call(_context3.t3, _context3.t6);
-            _context3.t8 = {
-              method: 'post',
-              headers: _context3.t2,
-              body: _context3.t7
-            };
-            _context3.next = 13;
-            return (0, _context3.t0)(_context3.t1, _context3.t8);
-
-          case 13:
-            response = _context3.sent;
-            return _context3.abrupt("return", response.json());
-
-          case 15:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  }));
-
-  return function (_x3, _x4) {
-    return _ref3.apply(this, arguments);
-  };
-}();
-
-exports.getBeneficiaries =
-/*#__PURE__*/
-function () {
-  var _ref4 = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee4(token) {
-    var response;
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            _context4.next = 2;
-            return fetch("".concat(baseURL, "/appointment/beneficiaries"), {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: "Bearer ".concat(token)
-              }
-            });
-
-          case 2:
-            response = _context4.sent;
-            return _context4.abrupt("return", response.json());
-
-          case 4:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-
-  return function (_x5) {
-    return _ref4.apply(this, arguments);
-  };
-}();
-
-exports.getCaptcha =
-/*#__PURE__*/
-function () {
-  var _ref5 = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee5(token) {
-    var response;
-    return regeneratorRuntime.wrap(function _callee5$(_context5) {
-      while (1) {
-        switch (_context5.prev = _context5.next) {
-          case 0:
-            _context5.next = 2;
-            return fetch("".concat(baseURL, "/auth/getRecaptcha"), {
-              method: 'post',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: "Bearer ".concat(token)
-              },
-              body: JSON.stringify({})
-            });
-
-          case 2:
-            response = _context5.sent;
-            return _context5.abrupt("return", response.json());
-
-          case 4:
-          case "end":
-            return _context5.stop();
-        }
-      }
-    }, _callee5);
-  }));
-
-  return function (_x6) {
-    return _ref5.apply(this, arguments);
-  };
-}();
-},{}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+module.exports = reloadCSS;
+},{"./bundle-url":"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -354,7 +212,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49307" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52264" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -529,5 +387,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/api.js"], null)
-//# sourceMappingURL=/api.0997d2ba.js.map
+},{}]},{},["../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
+//# sourceMappingURL=/index.js.map
