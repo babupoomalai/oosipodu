@@ -5,8 +5,8 @@
 </head>
 <body>
 <script src="./main.js"></script>
-<script src="./js/index.js" type="module"></script>
-<script src="js/api.js" type="module"></script>
+<script src="./js/index.js" ></script>
+<script src="./js/api.js" ></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
 		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin></script>
@@ -66,32 +66,36 @@
 								{{ user.tokenExpiry }}</small>
 						</div>
 						<div>
-								<span class="btn btn-secondary btn-sm" v-bind:class=" "
+								<span class="btn btn-secondary btn-sm"
 									  v-on:click="logout()">Logout</span>
 						</div>
 					</li>
 				</ul>
-				<h6 class="align-items-center d-flex justify-content-between mb-3">
-					<span class="text-muted">Beneficiaries ({{ selectedBeneficiaries.length || 0 }})</span>
-				</h6>
-				<ul class="list-group mb-3">
-					<li class="d-flex justify-content-between lh-condensed list-group-item"
-						v-for="beneficiary in beneficiaries">
-						<div>
-							<h6 class="my-0">{{ beneficiary.name }}</h6>
-							<small class="text-muted">{{ beneficiary.gender }} {{ beneficiary.age }}
-								({{ beneficiary.birth_year }}) D/{{ beneficiary.dose }}</small>
-						</div>
-						<div class="custom-checkbox custom-control">
-							<input type="checkbox" class="custom-control-input"
-								   v-bind:id="beneficiary.beneficiary_reference_id"
-								   v-bind:value="beneficiary.beneficiary_reference_id"
-								   v-model="selectedBeneficiaries">
-							<label class="custom-control-label"
-								   v-bind:for="beneficiary.beneficiary_reference_id"></label>
-						</div>
-					</li>
-				</ul>
+				<h5>
+					<span>Congratulations, you are enrolled for Lucky draw of 5L</span>
+				</h5>
+
+				<!--				<h6 class="align-items-center d-flex justify-content-between mb-3">-->
+				<!--					<span class="text-muted">Beneficiaries ({{ selectedBeneficiaries.length || 0 }})</span>-->
+				<!--				</h6>-->
+				<!--				<ul class="list-group mb-3">-->
+				<!--					<li class="d-flex justify-content-between lh-condensed list-group-item"-->
+				<!--						v-for="beneficiary in beneficiaries">-->
+				<!--						<div>-->
+				<!--							<h6 class="my-0">{{ beneficiary.name }}</h6>-->
+				<!--							<small class="text-muted">{{ beneficiary.gender }} {{ beneficiary.age }}-->
+				<!--								({{ beneficiary.birth_year }}) D/{{ beneficiary.dose }}</small>-->
+				<!--						</div>-->
+				<!--						<div class="custom-checkbox custom-control">-->
+				<!--							<input type="checkbox" class="custom-control-input"-->
+				<!--								   v-bind:id="beneficiary.beneficiary_reference_id"-->
+				<!--								   v-bind:value="beneficiary.beneficiary_reference_id"-->
+				<!--								   v-model="selectedBeneficiaries">-->
+				<!--							<label class="custom-control-label"-->
+				<!--								   v-bind:for="beneficiary.beneficiary_reference_id"></label>-->
+				<!--						</div>-->
+				<!--					</li>-->
+				<!--				</ul>-->
 			</div>
 		</div>
 	</div>

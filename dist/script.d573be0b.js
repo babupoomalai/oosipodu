@@ -5952,7 +5952,7 @@ function leverageNative( el, type, expectSync ) {
 		return;
 	}
 
-	// Register the controller as a special universal handler for all event namespaces
+	// Register the service as a special universal handler for all event namespaces
 	dataPriv.set( el, type, false );
 	jQuery.event.add( el, type, {
 		namespace: false,

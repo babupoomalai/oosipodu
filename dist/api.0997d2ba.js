@@ -126,8 +126,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // export default (window.$ = window.jQuery = jquery);
 var baseURL = 'https://cdn-api.co-vin.in/api/v2';
 
-var sha256 = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(message) {
+var sha256 =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee(message) {
     var msgUint8, hashBuffer, hashArray, hashHex;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -158,8 +162,12 @@ var sha256 = /*#__PURE__*/function () {
   };
 }();
 
-exports.sendOTP = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(mobile) {
+exports.sendOTP =
+/*#__PURE__*/
+function () {
+  var _ref2 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee2(mobile) {
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -192,8 +200,12 @@ exports.sendOTP = /*#__PURE__*/function () {
   };
 }();
 
-exports.validateOTP = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(id, otp) {
+exports.validateOTP =
+/*#__PURE__*/
+function () {
+  var _ref3 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee3(id, otp) {
     var response;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
@@ -241,8 +253,12 @@ exports.validateOTP = /*#__PURE__*/function () {
   };
 }();
 
-exports.getBeneficiaries = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(token) {
+exports.getBeneficiaries =
+/*#__PURE__*/
+function () {
+  var _ref4 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee4(token) {
     var response;
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
@@ -273,8 +289,12 @@ exports.getBeneficiaries = /*#__PURE__*/function () {
   };
 }();
 
-exports.getCaptcha = /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(token) {
+exports.getCaptcha =
+/*#__PURE__*/
+function () {
+  var _ref5 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee5(token) {
     var response;
     return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
@@ -334,7 +354,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58492" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53905" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -365,9 +385,8 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
         assetsToAccept.forEach(function (v) {
           hmrAcceptRun(v[0], v[1]);
         });
-      } else if (location.reload) {
-        // `location` global exists in a web worker context but lacks `.reload()` function.
-        location.reload();
+      } else {
+        window.location.reload();
       }
     }
 

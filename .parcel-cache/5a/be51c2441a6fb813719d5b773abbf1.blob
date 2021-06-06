@@ -1,0 +1,15 @@
+const database = require('./database');
+
+exports.updateUser = function (user) {
+	if (!user) {
+		return null;
+	}
+
+	const dbUserList = database.query("SELECT id from user where mobile =" + user.mobile)
+	if (!dbUserList) {
+		database.query('INSERT INTO user(mobile) values(?)', user.mobile);
+	} else {
+		console.log("User exists: " + JSON.stringify(dbUserList[0]));
+	}
+}
+

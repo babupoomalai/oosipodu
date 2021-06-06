@@ -1,6 +1,9 @@
 /* global moment, localStorage, history Vue */
 
-const api = require('./api')
+const _ = require('underscore');
+
+const api = require('./api');
+const UserService = require("../src/user-service")
 
 document.addEventListener('DOMContentLoaded', function () {
 	const app = new Vue({
@@ -23,8 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				tokenExpiry: null
 			},
 			// options
-			autoSelectAvailableSession: false,
-			playSoundWhenAvailable: false,
 			// error success messages
 			scheduleSuccess: null,
 			scheduleError: null,
@@ -72,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					if (years >= 45) age = '45+'
 					else age = '18+'
 
-					return { ...beneficiary, dose, age }
+					return {...beneficiary, dose, age}
 				})
 			}
 		},
@@ -100,10 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				this.scheduleError = null
 				this.scheduleSuccess = null
 			},
-			autoSelectAvailableSession: function (value) {
-				if (value) localStorage.setItem('autoSelectAvailableSession', value)
-				else localStorage.removeItem('autoSelectAvailableSession')
-			},
 			playSoundWhenAvailable: function (value) {
 				if (value) localStorage.setItem('playSoundWhenAvailable', value)
 				else localStorage.removeItem('playSoundWhenAvailable')
@@ -111,8 +108,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 		created: async function () {
 			this.setUserFromStorage()
-
-			this.setFiltersFromURL()
 		},
 		methods: {
 			updateTokenExpiry: function () {
@@ -140,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				this.autoSelectAvailableSession = localStorage.getItem('autoSelectAvailableSession')
 				this.playSoundWhenAvailable = localStorage.getItem('playSoundWhenAvailable')
 
-				if (this.isAuthenticated) this.getBeneficiaries()
+				if (this.isAuthenticated) this.loggedIn()
 				if (this.authenticatedAt) this.updateTokenExpiry()
 			},
 			updateUrl: function () {
@@ -154,16 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				url.search = urlParams
 
 				history.pushState({}, null, url.href)
-			},
-			setFiltersFromURL: function () {
-				const urlParams = new URLSearchParams(window.location.search)
-
-				for (const filter in this.filters) {
-					if (urlParams && urlParams.get(filter)) {
-						this.filters[filter] = urlParams.get(filter)
-						if (filter === 'state_id') this.getDistricts()
-					}
-				}
 			},
 			calculateDate: function (index) {
 				return (moment().add(index, 'days'))
@@ -194,7 +179,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					this.updateTokenExpiry()
 
-					await this.getBeneficiaries()
+					this.loggedIn();
+				}
+			},
+			loggedIn: async function () {
+				const dbUser = await UserService.getUserDetail(this.mobile);
+				this.user.dbUser = dbUser;
+				const beneficiaries = await this.getBeneficiaries();
+				console.log("be: " + beneficiaries);
+				if (_.isEmpty(beneficiaries)) {
+					// _.find(beneficiaries, obj => )
+				} else {
+					const vaccinatedPerson = _.find(beneficiaries, person => !!person.dose1_date || !!person.dose2_date);
+					if (vaccinatedPerson) {
+						console.log("Person vaccinated");
+						if (dbUser == null) {
+							await UserService.addUser(this.mobile, beneficiaries);
+						}
+					}
 				}
 			},
 			getBeneficiaries: async function () {
@@ -204,12 +206,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				// auto select all beneficiaries
 				this.selectedBeneficiaries = this.beneficiaryIds
+				// backend.getUserDetail().then(event => console.log("ev: " + event));
+				// console.log("backend: " + backend.getUserDetail());
+				return this.user.beneficiaries;
+
 			},
 			getCaptcha: async function () {
 				const json = await api.getCaptcha(this.token)
 
 				this.user.captchaImage = json.captcha
-			}
+			},
 		}
 	})
 })
