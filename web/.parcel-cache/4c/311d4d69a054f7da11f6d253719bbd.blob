@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+	<title>Parcel Demo</title>
+</head>
+<body>
+<script src="7c0471f46b419b773339592412970025"></script>
+<script src="1b891f01356940479fe875b2bd0563b6"></script>
+<script src="db05a5b68a117e673e642d40dca84740"></script>
+<script src="e95f54d00c309d3f26d466f25119a1f2"></script>
+<script src="caf4765bc92ee41859be28df3824483b" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin=""></script>
+
+<div id="app">
+	<div class="col-md-4 mb-4 order-md-2">
+		<div v-if="!isAuthenticated">
+			<h4 class="align-items-center d-flex justify-content-between mb-3">
+				<span class="text-muted">Login</span>
+			</h4>
+			<div class="mb-3" v-if="!user.waitingForOTP">
+				<div class="input-group">
+					<input type="tel" class="form-control" placeholder="Mobile Number" v-model.trim="mobile" v-on:keyup.enter="sendOTP()">
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-secondary" v-on:click="sendOTP()">Send OTP</button>
+					</div>
+				</div>
+			</div>
+			<div class="mb-3" v-if="sendOTPError">
+				<div class="alert alert-danger" role="alert">
+					<small>{{ sendOTPError }}</small>
+				</div>
+			</div>
+			<div class="mb-3" v-if="user.waitingForOTP">
+				<div class="input-group">
+					<input type="tel" class="form-control" placeholder="OTP" v-model.trim="user.otp" v-on:keyup.enter="validateOTP()">
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-secondary" v-on:click="validateOTP()">Validate OTP
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="mb-3" v-if="sendOTPSuccess">
+				<div class="alert alert-success" role="alert">
+					<small>{{ sendOTPSuccess }}</small>
+				</div>
+			</div>
+			<div class="mb-3" v-if="otpError">
+				<div class="alert alert-danger" role="alert">
+					<small>{{ otpError }}</small>
+				</div>
+			</div>
+		</div>
+
+		<div v-else="">
+			<h4 class="align-items-center d-flex justify-content-between mb-3">
+				<span class="text-muted">Hello !</span>
+			</h4>
+			<div>
+				<ul class="list-group mb-3">
+					<li class="d-flex justify-content-between lh-condensed list-group-item">
+						<div>
+							<h6 class="my-0">{{ mobile }}</h6>
+							<small class="text-muted" v-if="user.tokenExpiry">Expires in
+								{{ user.tokenExpiry }}</small>
+						</div>
+						<div>
+								<span class="btn btn-secondary btn-sm" v-on:click="logout()">Logout</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div v-if="isFinishedProcess">
+				<div v-if="isAuthenticated && isVaccinated">
+					<h5>
+						<span>Congratulations, you are enrolled for Lucky draw of 5L</span>
+					</h5>
+				</div>
+				<div v-else-if="isAuthenticated">
+					<h5>
+						<span>Oops, Please vaccinate to enjoy the rewards</span>
+					</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

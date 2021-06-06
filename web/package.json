@@ -1,7 +1,6 @@
 {
   "name": "cowin",
   "version": "1.0.0",
-  "main": "main.js",
   "dependencies": {
     "@babel/core": "^7.14.3",
     "axios": "^0.21.1",

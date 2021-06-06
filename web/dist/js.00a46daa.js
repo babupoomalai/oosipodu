@@ -7682,7 +7682,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var beneficiaries = this.user.beneficiaries || [];
         return _.find(beneficiaries, function (person) {
           return !_.isEmpty(person.dose1_date) || !_.isEmpty(person.dose2_date);
-        }) != null;
+        }) != null; // return this.user.dbuser.cnt > 0;
       },
       beneficiaryIds: function beneficiaryIds() {
         return this.user.beneficiaries.map(function (beneficiary) {
@@ -7888,7 +7888,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var _loggedIn = _asyncToGenerator(
         /*#__PURE__*/
         regeneratorRuntime.mark(function _callee4() {
-          var dbUser, beneficiaries;
+          var dbUser, beneficiaries, _dbUser;
+
           return regeneratorRuntime.wrap(function _callee4$(_context4) {
             while (1) {
               switch (_context4.prev = _context4.next) {
@@ -7910,34 +7911,45 @@ document.addEventListener('DOMContentLoaded', function () {
                     break;
                   }
 
-                  _context4.next = 17;
+                  _context4.next = 22;
                   break;
 
                 case 10:
                   if (!this.isVaccinated) {
-                    _context4.next = 17;
+                    _context4.next = 22;
                     break;
                   }
-
-                  console.log("Person vaccinated");
 
                   if (!(dbUser == null)) {
-                    _context4.next = 17;
+                    _context4.next = 21;
                     break;
                   }
 
-                  _context4.next = 15;
+                  _context4.next = 14;
                   return UserService.addUser(this.mobile, beneficiaries);
 
-                case 15:
-                  _context4.next = 17;
+                case 14:
+                  _context4.next = 16;
+                  return UserService.getUserDetail(this.mobile);
+
+                case 16:
+                  _dbUser = _context4.sent;
+                  this.user.dbUser = _dbUser;
+                  this.updateBeneficiaries(beneficiaries); // If person newly vaccinated, mark in db
+
+                  _context4.next = 22;
                   break;
 
-                case 17:
+                case 21:
+                  if (dbUser.cnt != beneficiaries.length) {
+                    this.updateBeneficiaries();
+                  }
+
+                case 22:
                   this.finishedProcess = true;
                   $('#mainPanel').removeAttr('style');
 
-                case 19:
+                case 24:
                 case "end":
                   return _context4.stop();
               }
@@ -8077,7 +8089,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49304" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56882" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

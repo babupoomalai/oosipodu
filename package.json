@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-	"heroku-postbuild": "cd web && npm install && npm run build && parcel index.html"
+	"heroku-postbuild": "cd web/ && npm install && npm run build"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
