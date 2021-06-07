@@ -59,3 +59,27 @@ exports.updateBeneficiaries = async (userId, beneficiaries) => {
 		return false;
 	}
 }
+
+exports.getCoupons =
+	async function (store) {
+		axiosInstance.interceptors.request.use(config => {
+			// perform a task before the request is sent
+			// console.log('Request was sent');
+
+			return config;
+		}, error => {
+			// handle the error
+			return Promise.reject(error);
+		});
+		let url = "coupons/get";
+		if (!_.isEmpty(store)) {
+			url += "?store=" + store;
+		}
+		const result = await axiosInstance.get(url);
+		// console.log("getUserDetail: " + result);
+		if (_.isEmpty(result.data)) {
+			return null;
+		} else {
+			return result.data;
+		}
+	}

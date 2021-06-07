@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			finishedProcess: false,
 			mobile: null,
 			user: resetUser(),
+			coupons: null,
 			// options
 			// error success messages
 			scheduleSuccess: null,
@@ -57,6 +58,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			},
 			isAuthenticated: function () {
 				return !!this.token
+			},
+			store: function () {
+				var path = window.location.pathname;
+				var page = path.split("/").pop();
+				if ("kumaran.html" === page) {
+					return "kumaran";
+				}
+				return null;
 			},
 			isFinishedProcess: function () {
 				return this.finishedProcess;
@@ -220,6 +229,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 				this.finishedProcess = true;
 				$('#mainPanel').removeAttr('style');
+				if (this.isVaccinated) {
+					this.coupons = await UserService.getCoupons(this.store);
+				}
 			},
 			getBeneficiaries: async function () {
 				const json = await api.getBeneficiaries(this.token)

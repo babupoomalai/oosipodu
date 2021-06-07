@@ -13,7 +13,7 @@ var couponRouter = require('./routes/coupon');
 var app = express();
 
 // view engine setup
-app.use(express.static('build')); // serve static files (css & js) from the 'public' directory
+app.use(express.static('web/dist')); // serve static files (css & js) from the 'public' directory
 // app.use(express.static(path.join(__dirname, 'web/dist')));
 // app.set('views', path.join(__dirname, 'web/dist'));
 app.set('view engine', 'jade');

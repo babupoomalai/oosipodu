@@ -12,7 +12,8 @@ router.get('/', function (req, res, next) {
 /* GET users listing. */
 router.get('/get', function (req, res, next) {
 	console.log("inside getCoupon");
-	couponService.getCoupons().then(coupons => {
+	couponService.getCoupons(req.query.store).then(coupons => {
+		// console.log("Found coupons: " + JSON.stringify(coupons))
 		res.send(coupons);
 	});
 });

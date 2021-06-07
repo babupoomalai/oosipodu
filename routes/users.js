@@ -15,7 +15,7 @@ router.get("/getDetail", function (req, res, next) {
 		res.render('error', {error: "Bad input"})
 	}
 	userService.getUser(req.query.mobile).then(user => {
-		console.log("Found user: " + JSON.stringify(user))
+		// console.log("Found user: " + JSON.stringify(user))
 		res.send(user);
 	});
 })
