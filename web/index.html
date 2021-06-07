@@ -4,6 +4,7 @@
 	<title>Oosi Podu rewards</title>
 </head>
 <body>
+<link rel="stylesheet" href="style.css"/>
 <script src="./main.js"></script>
 <script src="./js/index.js"></script>
 <script src="./js/api.js"></script>
@@ -12,32 +13,50 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
 		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin></script>
 
-<div id="app">
-	<div class="col-md-4 mb-4 order-md-2">
+<div id="app" class="overall-container">
+	<div class="header-container">
+		<div>
+          <span class="awesome-icon-container">
+              <img src="assets/Icon awesome-question-circle.png">
+               </span>
+			<span class="toggler-container">
+            <label class="switch">
+              <input type="checkbox" checked/>
+              <span class="slider round"></span>
+            </label>
+          </span>
+		</div>
+		<div class="main-heading">OOSI PODU REWARDS</div>
+		<div class="sub-heading">Verify Vaccine to Earn Rewards</div>
+	</div>
+
+	<div class="main-container">
 		<div v-if="!isAuthenticated">
-			<h4 class="align-items-center d-flex justify-content-between mb-3">
-				<span class="text-muted">Login</span>
-			</h4>
+			<div class="verify-header">VERIFY WITH MOBILE NUMBER</div>
 			<div class="mb-3" v-if="!user.waitingForOTP">
 				<div class="input-group">
-					<input type="tel" class="form-control" placeholder="Mobile Number" v-model.trim="mobile"
+					<input type="tel" class="mobile-number" placeholder="Mobile Number" v-model.trim="mobile"
 						   v-on:keyup.enter="sendOTP()">
 					<div class="input-group-append">
-						<button type="submit" class="btn btn-secondary" v-on:click="sendOTP()">Send OTP</button>
+						<button type="submit" class="btn btn-secondary get-otp-button" v-on:click="sendOTP()">Send OTP
+						</button>
 					</div>
 				</div>
 			</div>
+
 			<div class="mb-3" v-if="sendOTPError">
 				<div class="alert alert-danger" role="alert">
 					<small>{{ sendOTPError }}</small>
 				</div>
 			</div>
+
 			<div class="mb-3" v-if="user.waitingForOTP">
 				<div class="input-group">
-					<input type="tel" class="form-control" placeholder="OTP" v-model.trim="user.otp"
+					<input type="tel" class="mobile-number" placeholder="OTP" v-model.trim="user.otp"
 						   v-on:keyup.enter="validateOTP()">
 					<div class="input-group-append">
-						<button type="submit" class="btn btn-secondary" v-on:click="validateOTP()">Validate OTP
+						<button type="submit" class="btn btn-secondary get-otp-button" v-on:click="validateOTP()">
+							Validate OTP
 						</button>
 					</div>
 				</div>
@@ -90,6 +109,30 @@
 					<span> {{coupon.caption}} - {{coupon.coupon_code}} </span>
 				</div>
 			</div>
+		</div>
+	</div>
+
+	<div class="footer-container">
+		<div class="footer-header">Avail Discounts from 50+ Businesses</div>
+
+		<div class="footer-brand-row-1">
+          <span>
+            <img src="./assets/SS-Logo.png"/>
+          </span>
+
+			<span style="padding-left: 14px">
+            <img src="./assets/kumaran.png"/>
+          </span>
+		</div>
+
+		<div class="footer-brand-row-2">
+          <span>
+            <img src="./assets/pothys.png"/>
+          </span>
+
+			<span style="padding-left: 79px">
+            <img src="./assets/pazhamudir.png"/>
+          </span>
 		</div>
 	</div>
 </div>

@@ -1,0 +1,138 @@
+.overall-container {
+	width: auto;
+	padding-left: 25%;
+	padding-right: 25%;
+	height: auto;
+	background-color: #f9f9f9;
+	font-family: Segoe UI;
+}
+
+.header-container {
+	width: 412px;
+	height: 197px;
+	background-color: #00aeef;
+	opacity: 1;
+
+	/* border-bottom-left-radius: 50% 55%;
+	border-bottom-right-radius: 50% 55%; */
+}
+
+.main-heading {
+	padding-top: 30px;
+	padding-left: 38px;
+	width: 337px;
+	height: 62px;
+	text-align: center;
+}
+
+.sub-heading {
+	padding-left: 55px;
+	width: 303px;
+	text-align: center;
+	font-size: 16px;
+	color: #fff200;
+	font-weight: bold;
+}
+
+.awesome-icon-container {
+	padding-top: 19px;
+	padding-left: 19px;
+	width: 35px;
+	height: 35px;
+}
+
+.switch {
+	position: relative;
+	display: inline;
+	width: 44px;
+	height: 22px;
+}
+
+.main-container {
+	padding-left: 29px;
+	padding-bottom: 69px;
+}
+
+.verify-header {
+	height: 21px;
+	padding-top: 29px;
+	color: #414141;
+	font-size: 16px;
+	font-family: "Segoe UI Semibold";
+	text-transform: uppercase;
+
+}
+
+.mobile-number {
+	height: 77px;
+	width: 354px;
+	border-color: #00aeef;
+	border-radius: 8px;
+}
+
+::placeholder {
+	color: #c2c2c2;
+	font-size: 22px;
+}
+
+.get-otp-button {
+	height: 50px;
+	width: 354px;
+	margin-top: 20px;
+	background-color: #848484;
+	color: #ffffff;
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: uppercase;
+	border-radius: 5px;
+	border-width: 0px;
+	border-color: #848484;
+}
+
+.or-intermidiate {
+	padding-top: 29px;
+	align-self: center;
+	width: 20px;
+	height: 30px;
+	font-size: 22px;
+	color: #989898;
+}
+
+.get-qr-button {
+	height: 77px;
+	width: 354px;
+	background-color: #ffffff;
+	font-size: 18px;
+	font-weight: bold;
+	color: #00aeef;
+	text-transform: uppercase;
+	border-color: #00aeef;
+	border-radius: 8px;
+
+}
+
+.footer-container {
+	height: 601px;
+	background-color: #FFFFFF;
+
+}
+
+.footer-header {
+	padding-top: 35px;
+	padding-left: 25px;
+	color: #707070;
+	font-weight: bold;
+	text-align: center;
+	font-size: 20px;
+
+}
+
+.footer-brand-row-1 {
+	padding-top: 22px;
+	padding-left: 21px
+}
+
+.footer-brand-row-2 {
+	padding-top: 15px;
+	padding-left: 67px
+}
