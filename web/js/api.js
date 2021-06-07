@@ -34,7 +34,8 @@ exports.validateOTP = async function (id, otp) {
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
 			txnId: id,
-			otp: await sha256(otp)
+			otp: CryptoJS.SHA256(otp).toString()
+			// otp: await sha256(otp)
 		})
 	})
 
