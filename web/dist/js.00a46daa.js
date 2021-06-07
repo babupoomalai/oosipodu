@@ -7626,6 +7626,18 @@ var api = require('./api');
 
 var UserService = require("../src/user-service");
 
+function resetUser() {
+  return {
+    otp: null,
+    otpId: null,
+    waitingForOTP: false,
+    beneficiaries: [],
+    captchaImage: null,
+    captcha: null,
+    tokenExpiry: null
+  };
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   var app = new Vue({
     el: '#app',
@@ -7638,15 +7650,7 @@ document.addEventListener('DOMContentLoaded', function () {
       token: null,
       finishedProcess: false,
       mobile: null,
-      user: {
-        otp: null,
-        otpId: null,
-        waitingForOTP: false,
-        beneficiaries: [],
-        captchaImage: null,
-        captcha: null,
-        tokenExpiry: null
-      },
+      user: resetUser(),
       // options
       // error success messages
       scheduleSuccess: null,
@@ -7774,6 +7778,8 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       logout: function logout() {
         this.token = null;
+        this.user = resetUser();
+        this.finishedProcess = false;
       },
       setUserFromStorage: function setUserFromStorage() {
         this.authenticatedAt = localStorage.getItem('authenticatedAt');
@@ -7935,7 +7941,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 case 16:
                   _dbUser = _context4.sent;
                   this.user.dbUser = _dbUser;
-                  this.updateBeneficiaries(beneficiaries); // If person newly vaccinated, mark in db
+                  this.updateBeneficiaries(); // If person newly vaccinated, mark in db
 
                   _context4.next = 22;
                   break;
@@ -8089,7 +8095,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56882" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61782" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

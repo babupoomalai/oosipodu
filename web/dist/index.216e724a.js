@@ -449,6 +449,18 @@ const _ = require('underscore');
 const api = require('./api');
 const UserService = require("../src/user-service")
 
+function resetUser() {
+	return {
+		otp: null,
+		otpId: null,
+		waitingForOTP: false,
+		beneficiaries: [],
+		captchaImage: null,
+		captcha: null,
+		tokenExpiry: null
+	};
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 	const app = new Vue({
 		el: '#app',
@@ -461,15 +473,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			token: null,
 			finishedProcess: false,
 			mobile: null,
-			user: {
-				otp: null,
-				otpId: null,
-				waitingForOTP: false,
-				beneficiaries: [],
-				captchaImage: null,
-				captcha: null,
-				tokenExpiry: null
-			},
+			user: resetUser(),
 			// options
 			// error success messages
 			scheduleSuccess: null,
@@ -578,7 +582,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				}, 1000)
 			},
 			logout: function () {
-				this.token = null
+				this.token = null;
+				this.user = resetUser();
+				this.finishedProcess = false;
 			},
 			setUserFromStorage: function () {
 				this.authenticatedAt = localStorage.getItem('authenticatedAt')
@@ -649,7 +655,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							await UserService.addUser(this.mobile, beneficiaries);
 							const dbUser = await UserService.getUserDetail(this.mobile);
 							this.user.dbUser = dbUser;
-							this.updateBeneficiaries(beneficiaries);
+							this.updateBeneficiaries();
 							// If person newly vaccinated, mark in db
 						} else if (dbUser.cnt != beneficiaries.length) {
 							this.updateBeneficiaries();

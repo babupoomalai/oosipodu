@@ -1,10 +1,10 @@
 {
   "name": "api",
   "version": "0.0.0",
-  "private": true,
+  "main": "index.js",
   "scripts": {
     "start": "nodemon ./bin/www",
-	"heroku-postbuild": "cd web/ && npm install && npm run build"
+    "build": "cd web/ && npm install && npm run build"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
