@@ -3,7 +3,8 @@ import axios from "axios"
 const _ = require('underscore');
 
 const axiosInstance = axios.create({
-	baseURL: 'http://localhost:3000',
+	// baseURL: 'http://localhost:' + (process.env.PORT || 3000) + '/api/',
+	baseURL: 'api/',
 	/* other custom settings */
 });
 

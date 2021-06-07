@@ -24,9 +24,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/coupons', couponRouter);
+let serverBaseUrl = '/api/';
+app.use(serverBaseUrl, indexRouter);
+app.use(`${serverBaseUrl}users`, usersRouter);
+app.use(`${serverBaseUrl}coupons`, couponRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
