@@ -17,9 +17,7 @@
     "mysql": "^2.18.1",
     "mysql-await": "^2.1.8",
     "underscore": "^1.13.1",
-    "util": "^0.12.4"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
+    "util": "^0.12.4",
+	"nodemon": "^2.0.7"
   }
 }
