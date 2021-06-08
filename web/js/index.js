@@ -177,6 +177,15 @@ document.addEventListener('DOMContentLoaded', function () {
 			calculateDate: function (index) {
 				return (moment().add(index, 'days'))
 			},
+			getImgUrl: function (coupon) {
+				var images = require.context('../img/', false, /\.png$/)
+				return images('./' + coupon.store + ".png");
+			},
+			getCouponCode: function (coupon) {
+				console.log(coupon.coupon_code + "- code");
+				coupon.text = coupon.coupon_code;
+				$(`#${coupon.store}`).text(coupon.coupon_code);
+			},
 			sendOTP: async function () {
 				const response = await api.sendOTP(this.mobile)
 

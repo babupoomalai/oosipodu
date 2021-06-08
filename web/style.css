@@ -1,5 +1,5 @@
-html {
-  font: normal normal bold 18px/24px Segoe UI;
+body {
+	font: normal normal 600 16px/21px Segoe UI;
 }
 
 .header-container {
@@ -42,7 +42,7 @@ html {
 	border-color: #00aeef !important;
 	border: 2px solid;
 	font-size: 20px;
-	border-radius: 8px;
+	border-radius: 7px !important;
 }
 
 ::placeholder {

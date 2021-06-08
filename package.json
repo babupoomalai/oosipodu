@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon ./bin/www",
-    "heroku-postbuild": "rm -rf build && cd web/ && npm install && parcel build *.html && cp -r dist/ ../build/"
+    "heroku-postbuild": "cd web/ && npm install && parcel build *.html && cp -r img dist/"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
