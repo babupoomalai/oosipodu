@@ -1,37 +1,23 @@
-.overall-container {
-	width: auto;
-	padding-left: 25%;
-	padding-right: 25%;
-	height: auto;
-	background-color: #f9f9f9;
-	font-family: Segoe UI;
-}
-
 .header-container {
-	width: 412px;
-	height: 197px;
-	background-color: #00aeef;
+	background: #00AEEF 0% 0% no-repeat padding-box;
 	opacity: 1;
-
 	/* border-bottom-left-radius: 50% 55%;
 	border-bottom-right-radius: 50% 55%; */
 }
 
-.main-heading {
-	padding-top: 30px;
-	padding-left: 38px;
-	width: 337px;
-	height: 62px;
-	text-align: center;
+.header-panel {
+	padding-top: 10%;
+	padding-left: 10%;
+	background: transparent url('img/oosi-podu-rewards.png') no-repeat;
 }
 
 .sub-heading {
-	padding-left: 55px;
-	width: 303px;
 	text-align: center;
-	font-size: 16px;
-	color: #fff200;
 	font-weight: bold;
+	font: normal normal bold 16px/21px Segoe UI;
+	letter-spacing: 0px;
+	color: #FFF200;
+	opacity: 1;
 }
 
 .awesome-icon-container {
@@ -48,11 +34,6 @@
 	height: 22px;
 }
 
-.main-container {
-	padding-left: 29px;
-	padding-bottom: 69px;
-}
-
 .verify-header {
 	height: 21px;
 	padding-top: 29px;
@@ -60,13 +41,14 @@
 	font-size: 16px;
 	font-family: "Segoe UI Semibold";
 	text-transform: uppercase;
-
 }
 
 .mobile-number {
-	height: 77px;
+	height: 50px;
 	width: 354px;
 	border-color: #00aeef;
+	border: 2px solid;
+	font-size: 20px;
 	border-radius: 8px;
 }
 
@@ -112,7 +94,7 @@
 }
 
 .footer-container {
-	height: 601px;
+	height: 200px;
 	background-color: #FFFFFF;
 
 }
