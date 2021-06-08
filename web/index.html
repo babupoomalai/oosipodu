@@ -3,7 +3,7 @@
 <head>
 	<title>Oosi Podu rewards</title>
 
-	<link rel="stylesheet" href="style.scss"/>
+	<link rel="stylesheet" href="style.css"/>
 	<script src="./main.js"></script>
 	<script src="./js/index.js"></script>
 	<script src="./js/api.js"></script>
@@ -37,15 +37,16 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-7 col-lg-7 col-sm-12 text-center">
+	<div class="row pt-5">
+		<div class="col-md-3 col-lg-3 col-sm-12 text-center">
 			<div v-if="!isAuthenticated">
-				<div class="verify-header">VERIFY WITH MOBILE NUMBER</div>
+				<div class="align-items-center d-flex justify-content-between mb-3">VERIFY WITH MOBILE NUMBER</div>
 				<div class="mb-3" v-if="!user.waitingForOTP">
 					<div class="input-group">
-						<input type="tel" class="mobile-number" placeholder="Mobile Number" v-model.trim="mobile"
+						<input type="tel" class="form-control mobile-number" placeholder="Mobile Number"
+							   v-model.trim="mobile"
 							   v-on:keyup.enter="sendOTP()">
-						<div class="input-group-append">
+						<div class="input-group">
 							<button type="submit" class="btn btn-secondary get-otp-button" v-on:click="sendOTP()">Send
 								OTP
 							</button>
@@ -60,13 +61,17 @@
 				</div>
 
 				<div class="mb-3" v-if="user.waitingForOTP">
-					<div class="input-group">
-						<input type="tel" class="mobile-number" placeholder="OTP" v-model.trim="user.otp"
-							   v-on:keyup.enter="validateOTP()">
-						<div class="input-group-append">
-							<button type="submit" class="btn btn-secondary get-otp-button" v-on:click="validateOTP()">
-								Validate OTP
-							</button>
+					<div class="mb-3">
+						<div class="input-group">
+							<input type="tel" class="form-control mobile-number" placeholder="OTP"
+								   v-model.trim="user.otp"
+								   v-on:keyup.enter="validateOTP()">
+							<div class="input-group">
+								<button type="submit" class="btn btn-secondary get-otp-button"
+										v-on:click="validateOTP()">
+									Validate OTP
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -81,56 +86,60 @@
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div v-else>
-				<h4 class="align-items-center d-flex justify-content-between mb-3">
-					<span class="text-muted">Hello !</span>
-				</h4>
-				<div>
-					<ul class="list-group mb-3">
-						<li class="d-flex justify-content-between lh-condensed list-group-item">
-							<div>
-								<h6 class="my-0">{{ mobile }}</h6>
-								<small class="text-muted" v-if="user.tokenExpiry">Expires in
-									{{ user.tokenExpiry }}</small>
-							</div>
-							<div>
+		<div class="row pt-5">
+			<div class="col-md-7 col-lg-7 col-sm-12 text-center">
+				<div v-if="isAuthenticated">
+					<h4 class="align-items-center d-flex justify-content-between mb-3">
+						<span class="text-muted">Hello !</span>
+					</h4>
+					<div>
+						<ul class="list-group mb-3">
+							<li class="d-flex justify-content-between lh-condensed list-group-item">
+								<div>
+									<h6 class="my-0">{{ mobile }}</h6>
+									<small class="text-muted" v-if="user.tokenExpiry">Expires in
+										{{ user.tokenExpiry }}</small>
+								</div>
+								<div>
 								<span class="btn btn-secondary btn-sm"
 									  v-on:click="logout()">Logout</span>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div v-if="isFinishedProcess" class="pb-5">
+						<div v-if="isAuthenticated && isVaccinated">
+							<div class="card">
+								<div class="card-body">
+									<h3 class="card-title">Oosi Potta Oru Latcham</h3>
+								</div>
+								<p class="card-text">
+									<span>Congratulations, you are enrolled for Lucky draw of 5L</span> Opted:
+									{{user.dbUser.opt_in}}
+								</p>
 							</div>
-						</li>
-					</ul>
-				</div>
-				<div v-if="isFinishedProcess" class="pb-5">
-					<div v-if="isAuthenticated && isVaccinated">
-						<div class="card">
-							<div class="card-body">
-								<h3 class="card-title">Oosi Potta Oru Latcham</h3>
-							</div>
-							<p class="card-text">
-								<span>Congratulations, you are enrolled for Lucky draw of 5L</span> Opted:
-								{{user.dbUser.opt_in}}
-							</p>
+						</div>
+						<div v-else-if="isAuthenticated">
+							<h5>
+								<span>Oops, Please vaccinate to enjoy the rewards</span>
+							</h5>
 						</div>
 					</div>
-					<div v-else-if="isAuthenticated">
-						<h5>
-							<span>Oops, Please vaccinate to enjoy the rewards</span>
-						</h5>
-					</div>
-				</div>
-				<div v-if="coupons !== null">
-					<div v-for="coupon in coupons" class="pb-4">
-						<div class="card">
-							<div class="card-body">
-								<h3 class="card-title">{{coupon.name}}</h3>
-							</div>
-							<span class="card-text">
+					<div v-if="coupons !== null">
+						<div v-for="coupon in coupons" class="pb-4">
+							<div class="card">
+								<div class="card-body">
+									<h3 class="card-title">{{coupon.name}}</h3>
+								</div>
+								<span class="card-text">
 								{{coupon.caption}}
 							</span>
-							<span class="card-text">
+								<span class="card-text">
 								{{coupon.coupon_code}}
 							</span>
+							</div>
 						</div>
 					</div>
 				</div>
