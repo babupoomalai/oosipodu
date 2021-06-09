@@ -30,19 +30,20 @@
 	</div>
 
 	<div class="row pt-5">
-		<div class="col-md-3 col-lg-3 col-sm-12 text-center mx-auto">
+		<div class="col-md-3 col-lg-3 col-sm-11 text-center mx-auto">
 			<div v-if="!isAuthenticated">
-				<div class="align-items-center d-flex justify-content-between mb-3">VERIFY WITH MOBILE NUMBER</div>
+				<div class="align-items-center justify-content-between mb-3">VERIFY WITH MOBILE NUMBER</div>
 				<div class="mb-3" v-if="!user.waitingForOTP">
 					<div class="input-group">
 						<input type="tel" class="form-control mobile-number input-lg" placeholder="Mobile Number"
 							   v-model.trim="mobile"
 							   v-on:keyup.enter="sendOTP()">
-						<div class="input-group">
-							<button type="submit" class="btn btn-secondary get-otp-button" v-on:click="sendOTP()">Send
-								OTP
-							</button>
-						</div>
+					</div>
+					<div class="input-group">
+						<button type="text" class="btn btn-secondary get-otp-button"
+								v-on:click="sendOTP()">Send
+							OTP
+						</button>
 					</div>
 				</div>
 

@@ -52,7 +52,7 @@ body {
 
 .get-otp-button {
 	height: 50px;
-	width: 354px;
+	width: 100%;
 	margin-top: 20px;
 	text-transform: uppercase;
 }
