@@ -3,7 +3,7 @@
 const _ = require('underscore');
 
 const api = require('./api');
-const UserService = require("../src/user-service")
+const userService = require("../src/user-service")
 
 function resetUser() {
 	return {
@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				return this.finishedProcess;
 			},
 			isVaccinated: function () {
+				if (!!this.user.dbUser) {
+					return true;
+				}
 				const beneficiaries = this.user.beneficiaries || [];
 				return _.find(beneficiaries, person => !_.isEmpty(person.dose1_date) || !_.isEmpty(person.dose2_date)) != null;
 				// return this.user.dbuser.cnt > 0;
@@ -97,6 +100,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					return {...beneficiary, dose, age}
 				})
+			},
+			isOptIn: function () {
+				if (this.user.dbUser != null) {
+					return this.user.dbUser.opt_in;
+				}
+				return false;
 			}
 		},
 		watch: {
@@ -216,8 +225,26 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			},
 			loggedIn: async function () {
-				const dbUser = await UserService.getUserDetail(this.mobile);
+				const dbUser = await userService.getUserDetail(this.mobile);
 				this.user.dbUser = dbUser;
+				// Existence of entry means vaccinated
+				if (dbUser == null) {
+					this.fetchBeneficiaries();
+				} else {
+					this.finishedProcess = true;
+					$('#mainPanel').removeAttr('style');
+					this.fetchCoupons();
+				}
+				if (dbUser != null) {
+					this.fetchBeneficiaries(dbUser);
+				}
+			},
+			fetchCoupons: async function () {
+				if (this.isVaccinated) {
+					this.coupons = await userService.getCoupons(this.store);
+				}
+			},
+			fetchBeneficiaries: async function (dbUser) {
 				const beneficiaries = await this.getBeneficiaries();
 				// console.log("be: " + beneficiaries);
 				if (_.isEmpty(beneficiaries)) {
@@ -226,21 +253,18 @@ document.addEventListener('DOMContentLoaded', function () {
 					if (this.isVaccinated) {
 						// console.log("Person vaccinated");
 						if (dbUser == null) {
-							await UserService.addUser(this.mobile, beneficiaries);
-							const dbUser = await UserService.getUserDetail(this.mobile);
+							await userService.addUser(this.mobile, beneficiaries);
+							dbUser = await userService.getUserDetail(this.mobile);
 							this.user.dbUser = dbUser;
 							this.updateBeneficiaries();
 							// If person newly vaccinated, mark in db
 						} else if (dbUser.cnt != beneficiaries.length) {
 							this.updateBeneficiaries();
 						}
+						this.fetchCoupons();
 					}
 				}
 				this.finishedProcess = true;
-				$('#mainPanel').removeAttr('style');
-				if (this.isVaccinated) {
-					this.coupons = await UserService.getCoupons(this.store);
-				}
 			},
 			getBeneficiaries: async function () {
 				const json = await api.getBeneficiaries(this.token)
@@ -255,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			},
 			updateBeneficiaries: async function () {
 				if (!!this.user.dbUser) {
-					await UserService.updateBeneficiaries(this.user.dbUser.id, this.user.beneficiaries);
+					await userService.updateBeneficiaries(this.user.dbUser.id, this.user.beneficiaries);
 				}
 			},
 			getCaptcha: async function () {
@@ -263,6 +287,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				this.user.captchaImage = json.captcha
 			},
+			optIn: async function () {
+				const result = await userService.optIn(this.mobile, true);
+				if (result) {
+					this.user.dbUser.opt_in = true;
+				}
+			},
+			optOut: async function () {
+				await userService.optIn(this.mobile, false);
+				if (result) {
+					this.user.dbUser.opt_in = false;
+				}
+			},
+
 		}
 	})
 })

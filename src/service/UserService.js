@@ -57,3 +57,8 @@ exports.updateBeneficiaries = async function (beneficiaries, userId) {
 	await dbutil.query(query);
 }
 
+exports.optIn = async function (mobile, isIn) {
+	const query = `UPDATE user SET opt_in=${isIn} where mobile = ${mobile}`;
+	await dbutil.query(query);
+}
+

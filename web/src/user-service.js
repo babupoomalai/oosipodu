@@ -83,3 +83,19 @@ exports.getCoupons =
 			return result.data;
 		}
 	}
+
+exports.optIn = async (mobile, isIn) => {
+	const result = await axiosInstance({
+		method: 'post',
+		url: 'users/optIn',
+		data: {
+			mobile: mobile,
+			isIn: isIn
+		}
+	});
+	if (result && result.status === 200) {
+		return true;
+	} else {
+		return false;
+	}
+}

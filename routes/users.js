@@ -42,5 +42,16 @@ router.post("/updateBeneficiaries", function (req, res, next) {
 	})
 })
 
+router.post("/optIn", function (req, res, next) {
+	console.log(`inside optIn: ${JSON.stringify(req.body)}`)
+	if (!req.body || !req.body.mobile) {
+		res.status(422);
+		res.render('error', {error: "Bad input"})
+	}
+	userService.optIn(req.body.mobile, req.body.isIn).then(() => {
+		res.status(200)
+	})
+})
+
 
 module.exports = router;

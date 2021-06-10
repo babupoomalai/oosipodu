@@ -30,10 +30,11 @@
 	</div>
 
 	<div class="row pt-5">
-		<div class="col-md-3 col-lg-3 col-sm-11 text-center mx-auto">
+		<div class="col-md-3 col-lg-3 col-sm-11 mx-auto">
 			<div v-if="!isAuthenticated">
-				<div class="align-items-center justify-content-between mb-3">VERIFY WITH MOBILE NUMBER</div>
+
 				<div class="mb-3" v-if="!user.waitingForOTP">
+					<div class="mb-3">VERIFY WITH MOBILE NUMBER</div>
 					<div class="input-group">
 						<input type="tel" class="form-control mobile-number input-lg" placeholder="Mobile Number"
 							   v-model.trim="mobile"
@@ -54,6 +55,7 @@
 				</div>
 
 				<div class="mb-3" v-if="user.waitingForOTP">
+					<div class="justify-content-between mb-3">ENTER OTP</div>
 					<div class="mb-3">
 						<div class="input-group">
 							<input type="tel" class="form-control mobile-number" placeholder="OTP"
@@ -80,39 +82,56 @@
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<div class="row pt-5">
-			<div class="col-md-4 col-lg-4 col-sm-12 text-center  mx-auto">
-				<div v-if="isAuthenticated">
-					<h4 class="align-items-center d-flex justify-content-between mb-3">
-						<span class="text-muted">Hello !</span>
-					</h4>
-					<div>
-						<ul class="list-group mb-3">
-							<li class="d-flex justify-content-between lh-condensed list-group-item">
-								<div>
-									<h6 class="my-0">{{ mobile }}</h6>
-									<small class="text-muted" v-if="user.tokenExpiry">Expires in
-										{{ user.tokenExpiry }}</small>
-								</div>
-								<div>
+	<div class="row">
+		<div class="col-md-5 col-lg-5 col-sm-12 text-center  mx-auto">
+			<div v-if="isAuthenticated">
+				<h4 class="align-items-center d-flex justify-content-between mb-3">
+					<span class="text-muted">Hello
+						<span v-if="isFinishedProcess">{{user.dbUser.name}}</span>!
+					</span>
+				</h4>
+				<div>
+					<ul class="list-group mb-3">
+						<li class="d-flex justify-content-between lh-condensed list-group-item">
+							<div>
+								<h6 class="my-0">{{ mobile }}</h6>
+								<span class="ml-1">
+									<small class="text-muted" v-if="user.tokenExpiry">expires in
+									{{ user.tokenExpiry }}</small>
+								</span>
+							</div>
+							<div>
 								<span class="btn btn-secondary btn-sm"
 									  v-on:click="logout()">Logout</span>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<div v-if="isFinishedProcess" class="pb-5">
-						<div v-if="isAuthenticated && isVaccinated">
-							<div class="card">
-								<div class="card-body">
-									<h3 class="card-title">Oosi Potta Oru Latcham</h3>
-								</div>
-								<p class="card-text">
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div v-if="isFinishedProcess" class="pb-5">
+					<div v-if="isAuthenticated && isVaccinated" class="pb-5">
+						<p class="vaccinatedPanel"> You are awesome for being vaccinated. These are just for you!</p>
+						<div class="card">
+							<div class="card-body">
+								<h3 class="card-title">Oosi Potta Oru Latcham</h3>
+							</div>
+							<div class="card-text p-2">
+								<div v-if="isOptIn">
 									<span>Congratulations, you are enrolled in a contest to win Rs. One Lakh</span>
-									Opted:
-									{{user.dbUser.opt_in}}
-								</p>
+									<div class="pt-3 mb-2">
+										<a class="opt-link" href="#" @click="optOut()">Click here to opt out</a>
+									</div>
+								</div>
+								<div v-else>
+									<span>Get a change to win the contest worth Rs. One Lakh</span>
+									<div class="pt-3 mb-2">
+										<a class="opt-link" href="#" @click="optIn()">Click here to opt in again</a>
+									</div>
+								</div>
+								<div class="card-footer">
+									View more details
+								</div>
 							</div>
 						</div>
 						<div v-else-if="isAuthenticated">
@@ -121,21 +140,24 @@
 							</h5>
 						</div>
 					</div>
+
 					<div v-if="coupons !== null">
-						<div v-for="coupon in coupons" class="pb-4">
-							<div class="card">
-								<!--								<img :src="getImgUrl(coupon)" v-bind:alt="pic" />-->
-								<img v-bind:src="'./img/' + coupon.store + '.png'"
-									 class="img-fluid mx-auto d-block mt-2">
-								<!--								<img src="url:./img/kumaran.png"/>-->
-								<div class="card-body">
-									{{coupon.caption}}
-									<div class="input-group mx-auto d-block mt-3">
-										<button type="button" class="btn btn-outline-primary btn-lg"
-												v-bind:id="coupon.store"
-												v-on:click="getCouponCode(coupon)">
-											COLLECT COUPON
-										</button>
+						<div class="card-columns">
+							<div v-for="coupon in coupons" class="pb-4">
+								<div class="card">
+									<!--								<img :src="getImgUrl(coupon)" v-bind:alt="pic" />-->
+									<img v-bind:src="'./img/' + coupon.store + '.png'"
+										 class="img-fluid mx-auto d-block mt-2">
+									<!--								<img src="url:./img/kumaran.png"/>-->
+									<div class="card-body">
+										{{coupon.caption}}
+										<div class="input-group mx-auto d-block mt-3">
+											<button type="button" class="btn btn-outline-primary btn-lg"
+													v-bind:id="coupon.store"
+													v-on:click="getCouponCode(coupon)">
+												COLLECT COUPON
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -144,49 +166,49 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="row ">
+			<div class="footer-header">Avail Discounts from 50+ Businesses</div>
+
+			<div class="col-lg-6 col-md-6 col-sm-12 mt-3">
+				<img src="img/SS-Logo.png" class="img-fluid mx-auto d-block float-lg-end float-md-end"/>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-12 mt-3">
+				<img src="img/kumaran.png" class="img-fluid mx-auto d-block float-lg-start float-md-start"/>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-12 mt-3">
+				<img src="img/pothys.png" class="img-fluid mx-auto d-block float-lg-end float-md-end"/>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-12 mt-3">
+				<img src="img/pazhamudhir.png" class="img-fluid d-block mx-auto float-lg-start float-md-start"/>
+			</div>
+		</div>
+
+		<!--	<footer class="my-5 pt-2 text-center text-muted text-small">-->
+		<!--		<p class="mb-1">© Chennai Tricolor initiative-->
+		<!--		</p>-->
+		<!--	</footer>-->
 	</div>
 
-	<div class="row ">
-		<div class="footer-header">Avail Discounts from 50+ Businesses</div>
-
-		<div class="col-lg-6 col-md-6 col-sm-12 mt-3">
-			<img src="img/SS-Logo.png" class="img-fluid mx-auto d-block float-lg-end float-md-end"/>
-		</div>
-		<div class="col-lg-6 col-md-6 col-sm-12 mt-3">
-			<img src="img/kumaran.png" class="img-fluid mx-auto d-block float-lg-start float-md-start"/>
-		</div>
-		<div class="col-lg-6 col-md-6 col-sm-12 mt-3">
-			<img src="img/pothys.png" class="img-fluid mx-auto d-block float-lg-end float-md-end"/>
-		</div>
-		<div class="col-lg-6 col-md-6 col-sm-12 mt-3">
-			<img src="img/pazhamudhir.png" class="img-fluid d-block mx-auto float-lg-start float-md-start"/>
+	<div class="container-fluid px-0 mt-3">
+		<div class="row">
+			<div class="col-md-12 col-lg-5 col-md-5 mx-auto d-block">
+				<img src="img/poster.png" alt="placeholder 960" class="img-fluid w-100"/>
+			</div>
 		</div>
 	</div>
 
-	<!--	<footer class="my-5 pt-2 text-center text-muted text-small">-->
-	<!--		<p class="mb-1">© Chennai Tricolor initiative-->
-	<!--		</p>-->
-	<!--	</footer>-->
-</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+			crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+			integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+			crossorigin></script>
 
-<div class="container-fluid px-0 mt-3">
-	<div class="row">
-		<div class="col-md-12 col-lg-4 mx-auto d-block">
-			<img src="img/poster.png" alt="placeholder 960" class="img-fluid w-100"/>
-		</div>
-	</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-		crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin></script>
-
-<script src="./main.js"></script>
-<script src="./js/index.js"></script>
-<script src="./js/api.js"></script>
+	<script src="./main.js"></script>
+	<script src="./js/index.js"></script>
+	<script src="./js/api.js"></script>
 </body>
 </html>

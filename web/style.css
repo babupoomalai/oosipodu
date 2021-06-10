@@ -1,5 +1,6 @@
-body {
-	font: normal normal 600 16px/21px Segoe UI;
+html * {
+	font-size: 1em !important;
+	font-family: normal 600 Segoe UI;
 }
 
 .header-container {
@@ -29,6 +30,10 @@ body {
 	padding-left: 19px;
 	width: 35px;
 	height: 35px;
+}
+
+.vaccinatedPanel {
+	text-align: left;
 }
 
 .switch {
@@ -64,6 +69,18 @@ body {
 	height: 30px;
 	font-size: 22px;
 	color: #989898;
+}
+
+.card {
+	box-shadow: 0 0 10px 0 rgba(100, 100, 100, 0.26);
+}
+
+.card-footer {
+	background-color: white;
+}
+
+.opt-link {
+	text-decoration: none;
 }
 
 .get-qr-button {
