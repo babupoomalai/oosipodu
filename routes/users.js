@@ -38,7 +38,7 @@ router.post("/updateBeneficiaries", function (req, res, next) {
 		res.render('error', {error: "Bad input"})
 	}
 	userService.updateBeneficiaries(req.body.beneficiaries, req.body.userId).then(() => {
-		res.end("success")
+		res.end("success");
 	})
 })
 
@@ -49,7 +49,8 @@ router.post("/optIn", function (req, res, next) {
 		res.render('error', {error: "Bad input"})
 	}
 	userService.optIn(req.body.mobile, req.body.isIn).then(() => {
-		res.status(200)
+		res.status(200);
+		res.end("success");
 	})
 })
 

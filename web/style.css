@@ -1,5 +1,5 @@
 html * {
-	font-size: 1em !important;
+	font-size: 1em;
 	font-family: normal 600 Segoe UI;
 }
 
@@ -69,6 +69,10 @@ html * {
 	height: 30px;
 	font-size: 22px;
 	color: #989898;
+}
+
+.contest .card-title {
+	font-size: calc(1.275rem + .3vw);
 }
 
 .card {

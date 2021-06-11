@@ -71,16 +71,31 @@ document.addEventListener('DOMContentLoaded', function () {
 				return this.finishedProcess;
 			},
 			isVaccinated: function () {
+				let isVaccinated = false;
 				if (!!this.user.dbUser) {
-					return true;
+					isVaccinated = true;
 				}
-				const beneficiaries = this.user.beneficiaries || [];
-				return _.find(beneficiaries, person => !_.isEmpty(person.dose1_date) || !_.isEmpty(person.dose2_date)) != null;
+				if (!isVaccinated) {
+					const beneficiaries = this.user.beneficiaries || [];
+					isVaccinated = _.find(beneficiaries, person => !_.isEmpty(person.dose1_date) || !_.isEmpty(person.dose2_date)) != null;
+				}
+				if (isVaccinated) {
+					setTimeout(() => {
+						if (this.isOptIn()) {
+							this.showOptIn();
+						} else {
+							this.showOptOut();
+						}
+					}, 1000);
+				}
+				return isVaccinated;
 				// return this.user.dbuser.cnt > 0;
-			},
+			}
+			,
 			beneficiaryIds: function () {
 				return this.user.beneficiaries.map((beneficiary) => beneficiary.beneficiary_reference_id)
-			},
+			}
+			,
 			beneficiaries: function () {
 				return this.user.beneficiaries.map((beneficiary) => {
 					let dose
@@ -100,12 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					return {...beneficiary, dose, age}
 				})
-			},
-			isOptIn: function () {
-				if (this.user.dbUser != null) {
-					return this.user.dbUser.opt_in;
-				}
-				return false;
 			}
 		},
 		watch: {
@@ -287,19 +296,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				this.user.captchaImage = json.captcha
 			},
+			showOptIn: function () {
+				$('#optedOut').addClass('d-none');
+				$('#optedIn').removeClass('d-none');
+			},
 			optIn: async function () {
 				const result = await userService.optIn(this.mobile, true);
 				if (result) {
 					this.user.dbUser.opt_in = true;
+					this.showOptIn();
 				}
+			},
+			showOptOut: function () {
+				$('#optedIn').addClass('d-none');
+				$('#optedOut').removeClass('d-none');
 			},
 			optOut: async function () {
-				await userService.optIn(this.mobile, false);
+				const result = await userService.optIn(this.mobile, false);
 				if (result) {
 					this.user.dbUser.opt_in = false;
+					this.showOptOut();
 				}
 			},
-
+			isOptIn: function () {
+				if (this.user.dbUser != null) {
+					return this.user.dbUser.opt_in;
+				}
+				return false;
+			}
 		}
 	})
 })

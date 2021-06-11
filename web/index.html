@@ -109,24 +109,26 @@
 						</li>
 					</ul>
 				</div>
-				<div v-if="isFinishedProcess" class="pb-5">
+				<div v-if="isFinishedProcess" class="pb-1">
 					<div v-if="isAuthenticated && isVaccinated" class="pb-5">
 						<p class="vaccinatedPanel"> You are awesome for being vaccinated. These are just for you!</p>
-						<div class="card">
+						<div class="card contest">
 							<div class="card-body">
-								<h3 class="card-title">Oosi Potta Oru Latcham</h3>
+								<h3 class="card-title">Oosi Potta Oru Latcham!</h3>
 							</div>
-							<div class="card-text p-2">
-								<div v-if="isOptIn">
+							<div class="card-text">
+								<!--								TODO: See if conditional rending can be done-->
+								<div class="d-none" id="optedIn">
 									<span>Congratulations, you are enrolled in a contest to win Rs. One Lakh</span>
 									<div class="pt-3 mb-2">
 										<a class="opt-link" href="#" @click="optOut()">Click here to opt out</a>
 									</div>
 								</div>
-								<div v-else>
-									<span>Get a change to win the contest worth Rs. One Lakh</span>
+								<div class="d-none" id="optedOut">
+									<span>Get a chance to win the contest worth Rs. One Lakh</span>
 									<div class="pt-3 mb-2">
-										<a class="opt-link" href="#" @click="optIn()">Click here to opt in again</a>
+										<a class="opt-link" href="#"
+										   @click="optIn()">Click here to opt in again</a>
 									</div>
 								</div>
 								<div class="card-footer">
