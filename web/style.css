@@ -226,4 +226,5 @@ body {
 
 .footer-image__wrap > img {
 	background-color: #fff;
+	padding: 0;
 }
