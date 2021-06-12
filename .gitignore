@@ -6,7 +6,6 @@ npm-debug.log
 /.cache/
 /dist/
 /.cache/
-/web/dist/
 /web/.parcel-cache/
 /.cache/
 /.parcel-cache/
