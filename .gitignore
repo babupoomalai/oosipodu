@@ -11,3 +11,4 @@ npm-debug.log
 /.parcel-cache/
 /web/.parcel-cache/
 /build/
+/web/dist/

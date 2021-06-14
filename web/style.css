@@ -14,7 +14,7 @@ html * {
 	font-family: SegoeFont;
 }
 
-body {	
+body {
 	overflow-x: hidden;
 	color: #414141;
 	background-color: #F9F9F9;
@@ -26,17 +26,17 @@ body {
 	}
 }
 
-.header-container {		
+.header-container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	opacity: 1;	
+	opacity: 1;
 	height: 160px;
 	position: relative;
 	z-index: 1;
 	border-radius: 0 0 50px 50px;
-	overflow: hidden;	
+	overflow: hidden;
 }
 
 .main-logo {
@@ -45,7 +45,7 @@ body {
 }
 
 .header-container::before {
-	display: 'block';
+	display: block;
 	content: '';
 	position: absolute;
 	left: 0;
@@ -80,6 +80,10 @@ body {
 	height: 35px;
 }
 
+.verification-failed {
+	text-align: start;
+}
+
 .vaccinatedPanel {
 	text-align: left;
 }
@@ -105,7 +109,7 @@ body {
 	font-size: 18px;
 	opacity: 1; /* Firefox */
 }
-  
+
 .mobile-number:-ms-input-placeholder { /* Internet Explorer 10-11 */
 	color: #7A7A7A !important;
 	font-size: 18px;
@@ -121,7 +125,7 @@ body {
 	font-size: 22px;
 }
 
-.get-otp-button {	
+.get-otp-button {
 	width: 100%;
 	margin-top: 20px;
 	text-transform: uppercase;
@@ -157,7 +161,7 @@ body {
 	text-decoration: none;
 }
 
-.get-qr-button {	
+.get-qr-button {
 	width: 100%;
 	background-color: #ffffff;
 	font-size: 18px;
@@ -171,13 +175,12 @@ body {
 
 .logo-container {
 	background-color: #fff;
-	padding: 30px 0;
 }
 
 .logo-list {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 20px 10px;	
+	padding: 20px 10px;
 	justify-content: space-around;
 	align-items: center;
 }
@@ -206,7 +209,7 @@ body {
 
 }
 
-.footer-header {	
+.footer-header {
 	color: #707070;
 	font-weight: bold;
 	text-align: center;

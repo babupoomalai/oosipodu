@@ -1,9 +1,12 @@
 /* global moment, localStorage, history Vue */
 
 const _ = require('underscore');
+const download = require('./download');
 
 const api = require('./api');
 const userService = require("../src/user-service")
+import html2canvas from "html2canvas"
+
 
 function resetUser() {
 	return {
@@ -13,7 +16,8 @@ function resetUser() {
 		beneficiaries: [],
 		captchaImage: null,
 		captcha: null,
-		tokenExpiry: null
+		tokenExpiry: null,
+		name: ""
 	};
 }
 
@@ -199,10 +203,38 @@ document.addEventListener('DOMContentLoaded', function () {
 				var images = require.context('../img/', false, /\.png$/)
 				return images('./' + coupon.store + ".png");
 			},
-			getCouponCode: function (coupon) {
-				console.log(coupon.coupon_code + "- code");
+			getCouponCode: async function (coupon) {
+				// console.log(coupon.coupon_code + "- code");
 				coupon.text = coupon.coupon_code;
 				$(`#${coupon.store}`).text(coupon.coupon_code);
+				// const doc = new jsPDF();
+				// const contentHtml = this.$refs.content.innerHTML;
+				// doc.fromHTML(contentHtml, 15, 15, {
+				// 	width: 170
+				// });
+				// doc.save("sample.pdf");
+				html2canvas(this.$refs.kumaran(`div.card#${coupon.store}`)
+					, {
+						backgroundColor: '#ffffff'
+					}
+				).then(canvas => {
+					var imgData = canvas.toDataURL("image/jpeg");
+					this.fileDownload(imgData);
+				})
+				// htmlToImage.toPng(document.getElementById(coupon.store))
+				// 	.then(function (dataUrl) {
+				// 		download(dataUrl, 'my-node.png');
+				// 	});
+			},
+			fileDownload(downloadUrl) {
+				let aLink = document.createElement("a");
+				aLink.style.display = "none";
+				aLink.href = downloadUrl;
+				aLink.download = "Monitoring Details.png";
+				// Trigger click-then remove
+				document.body.appendChild(aLink);
+				aLink.click();
+				document.body.removeChild(aLink);
 			},
 			sendOTP: async function () {
 				const response = await api.sendOTP(this.mobile)
@@ -233,9 +265,16 @@ document.addEventListener('DOMContentLoaded', function () {
 					this.loggedIn();
 				}
 			},
+			setDbUser: function (dbUser) {
+				if (dbUser == null) {
+					return;
+				}
+				this.user.dbUser = dbUser;
+				this.user.name = dbUser.name;
+			},
 			loggedIn: async function () {
 				const dbUser = await userService.getUserDetail(this.mobile);
-				this.user.dbUser = dbUser;
+				this.setDbUser(dbUser);
 				// Existence of entry means vaccinated
 				if (dbUser == null) {
 					this.fetchBeneficiaries();
@@ -264,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						if (dbUser == null) {
 							await userService.addUser(this.mobile, beneficiaries);
 							dbUser = await userService.getUserDetail(this.mobile);
-							this.user.dbUser = dbUser;
+							this.setDbUser(dbUser);
 							this.updateBeneficiaries();
 							// If person newly vaccinated, mark in db
 						} else if (dbUser.cnt != beneficiaries.length) {
@@ -273,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						this.fetchCoupons();
 					}
 				}
+				console.log("fetchedBeneficaries")
 				this.finishedProcess = true;
 			},
 			getBeneficiaries: async function () {
