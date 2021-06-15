@@ -5,7 +5,6 @@ const download = require('./download');
 
 const api = require('./api');
 const userService = require("../src/user-service")
-import html2canvas from "html2canvas"
 
 
 function resetUser() {
@@ -206,31 +205,29 @@ document.addEventListener('DOMContentLoaded', function () {
 			getCouponCode: async function (coupon) {
 				// console.log(coupon.coupon_code + "- code");
 				coupon.text = coupon.coupon_code;
-				$(`#${coupon.store}`).text(coupon.coupon_code);
+				$(`#${coupon.store} button#btnCoupon`).text(coupon.coupon_code);
 				// const doc = new jsPDF();
 				// const contentHtml = this.$refs.content.innerHTML;
 				// doc.fromHTML(contentHtml, 15, 15, {
 				// 	width: 170
 				// });
 				// doc.save("sample.pdf");
-				html2canvas(this.$refs.kumaran(`div.card#${coupon.store}`)
-					, {
-						backgroundColor: '#ffffff'
-					}
-				).then(canvas => {
-					var imgData = canvas.toDataURL("image/jpeg");
-					this.fileDownload(imgData);
-				})
+				// const $this = this;
+				// html2canvas(document.querySelector(`div.card#${coupon.store}`), {
+				// 	onrendered: function (canvas) {
+				// 		$this.saveAs(canvas, `${coupon.store}.png`);
+				// 	}
+				// });
 				// htmlToImage.toPng(document.getElementById(coupon.store))
 				// 	.then(function (dataUrl) {
 				// 		download(dataUrl, 'my-node.png');
 				// 	});
 			},
-			fileDownload(downloadUrl) {
+			fileDownload(downloadUrl, fileName) {
 				let aLink = document.createElement("a");
 				aLink.style.display = "none";
 				aLink.href = downloadUrl;
-				aLink.download = "Monitoring Details.png";
+				aLink.download = fileName;
 				// Trigger click-then remove
 				document.body.appendChild(aLink);
 				aLink.click();
@@ -291,7 +288,28 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (this.isVaccinated) {
 					this.coupons = await userService.getCoupons(this.store);
 				}
-			},
+
+				$('#btnCoupon').click(function () {
+					console.log('downloading')
+					let cardElem = this.closest('div.card');
+					const storeName = cardElem.getAttribute('id');
+
+					html2canvas(cardElem, {
+						onrendered: function (canvas) {
+							var tempcanvas = document.createElement('canvas');
+							tempcanvas.width = 465;
+							tempcanvas.height = 524;
+							var context = tempcanvas.getContext('2d');
+							context.drawImage(canvas, 465, 40, 465, 524, 0, 0, 465, 524);
+							var link = document.createElement("a");
+							link.href = canvas.toDataURL('image/jpg');
+							link.download = `${storeName}.jpg`;
+							link.click();
+						}
+					});
+				});
+			}
+			,
 			fetchBeneficiaries: async function (dbUser) {
 				const beneficiaries = await this.getBeneficiaries();
 				// console.log("be: " + beneficiaries);

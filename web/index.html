@@ -41,7 +41,7 @@
 						</div>
 						<div class="input-group">
 							<button type="text" class="btn btn-secondary get-otp-button"
-									v-on:click="sendOTP()">Send
+									v-on:click="sendOTP()">GET
 								OTP
 							</button>
 						</div>
@@ -63,7 +63,7 @@
 								<div class="input-group">
 									<button type="submit" class="btn btn-secondary get-otp-button"
 											v-on:click="validateOTP()">
-										Validate OTP
+										VERIFY AND PROCEED
 									</button>
 								</div>
 							</div>
@@ -72,6 +72,10 @@
 					<div class="mb-3" v-if="sendOTPSuccess">
 						<div class="alert alert-success" role="alert">
 							<small>{{ sendOTPSuccess }}</small>
+						</div>
+						<div style="background-color: #EBEBEB" class="text-center">We do not store any confidential
+							information. We use your mobile number only to check
+							your vaccination status in the CoWin platform.
 						</div>
 					</div>
 					<div class="mb-3" v-if="otpError">
@@ -151,7 +155,7 @@
 						<div v-if="coupons !== null">
 							<div class="card-columns">
 								<div v-for="coupon in coupons" class="pb-4">
-									<div class="card" ref="kumaran">
+									<div class="card" v-bind:id="coupon.store">
 										<!--								<img :src="getImgUrl(coupon)" v-bind:alt="pic" />-->
 										<img v-bind:src="'./img/' + coupon.store + '.png'"
 											 class="img-fluid mx-auto d-block mt-2">
@@ -160,7 +164,7 @@
 											{{ coupon.caption }}
 											<div class="input-group mx-auto d-block mt-3">
 												<button type="button" class="btn btn-outline-primary btn-lg"
-														v-bind:id="coupon.store"
+														id="btnCoupon"
 														v-on:click="getCouponCode(coupon)">
 													COLLECT COUPON
 												</button>
@@ -170,7 +174,9 @@
 										<div class="card-footer">View more details
 											<i class="bi bi-arrow-down"></i>
 										</div>
-
+										<div class="metadata d-none" >
+											${{ coupon.metadata }}
+										</div>
 									</div>
 								</div>
 							</div>
