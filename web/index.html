@@ -73,7 +73,7 @@
 						<div class="alert alert-success" role="alert">
 							<small>{{ sendOTPSuccess }}</small>
 						</div>
-						<div style="background-color: #EBEBEB" class="text-center">We do not store any confidential
+						<div class="alert alert-secondary">We do not store any confidential
 							information. We use your mobile number only to check
 							your vaccination status in the CoWin platform.
 						</div>
@@ -88,32 +88,22 @@
 		</div>
 
 		<div class="row">
-			<div class="text-center mx-auto">
+			<div class="box">
 				<div v-if="isAuthenticated">
-					<h4 class="align-items-center d-flex justify-content-between mb-3">
-						<span class="text-muted">Hello
+					<h4 class="align-items-center d-flex justify-content-between mb-3 h4">
+						<span>Hello
 							<span v-if="isFinishedProcess">{{ user.name }}</span>!
-						</span>
+						</span>				
+						<button type="button" class="btn btn-link"
+								v-on:click="logout()">Logout</button>						
 					</h4>
-					<div>
-						<ul class="list-group mb-3">
-							<li class="d-flex justify-content-between lh-condensed list-group-item">
-								<div>
-									<h6 class="my-0">{{ mobile }}</h6>
-									<span class="ml-1">
-										<small class="text-muted" v-if="user.tokenExpiry">expires in
-										{{ user.tokenExpiry }}</small>
-									</span>
-								</div>
-								<div>
-									<span class="btn btn-secondary btn-sm"
-										  v-on:click="logout()">Logout</span>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<div v-if="isFinishedProcess" class="pb-1">
-						<div v-if="isAuthenticated && isVaccinated" class="pb-5">
+					<p class="my-0">{{ mobile }}</p>
+					<p class="ml-1">
+						<small class="text-muted" v-if="user.tokenExpiry">expires in
+						{{ user.tokenExpiry }}</small>
+					</p>					
+					<div class="pb-1" v-if="isFinishedProcess">
+						<div class="pb-5" v-if="isAuthenticated && isVaccinated">
 							<p class="vaccinatedPanel"> You are awesome for being vaccinated. These are just for
 								you!</p>
 							<div class="card contest d-none">
@@ -131,7 +121,7 @@
 									<div class="d-none" id="optedOut">
 										<span>Get a chance to win exciting prizes</span>
 										<div class="pt-3 mb-2">
-											<btn class="btn btn-primary" href="#"
+											<btn class="btn btn-custom" href="#"
 												 @click="optIn()">ENTER CONTEST
 											</btn>
 										</div>
@@ -142,8 +132,10 @@
 								</div>
 							</div>
 						</div>
-						<div v-else-if="isAuthenticated" class="verification-failed mt-5">
-							<p class="h4">Verification Failed</p>
+						<div class="verification-failed mt-5" v-else-if="isAuthenticated">
+							<p class="h4 verification-heading">Verification Failed
+								<img src="./img/icon/warning.svg" alt="warning" class="verification-warn-icon">								
+							</p>
 							<div class="mt-4 pb-4">
 								Hi, We couldn't verify that you are vaccinated. Please get vaccinated
 								soon. If you're already vaccinated, it might take
@@ -154,18 +146,19 @@
 
 						<div v-if="coupons !== null">
 							<div class="card-columns">
-								<div v-for="coupon in coupons" class="pb-4">
+								<div class="pb-4" v-for="coupon in coupons">
 									<div class="card" v-bind:id="coupon.store">
 										<!--								<img :src="getImgUrl(coupon)" v-bind:alt="pic" />-->
 										<img v-bind:src="'./img/' + coupon.store + '.png'"
 											 class="img-fluid mx-auto d-block mt-2">
-										<!--								<img src="url:./img/kumaran.png"/>-->
+																		<!-- <img class="card-brand__logo" src="img/kumaran.png"/> -->
 										<div class="card-body">
-											{{ coupon.caption }}
+											<p class="card-body__copy">{{ coupon.caption }}</p>
 											<div class="input-group mx-auto d-block mt-3">
-												<button type="button" class="btn btn-outline-primary btn-lg"
+												<button type="button" class="btn btn-custom"
 														id="btnCoupon"
-														v-on:click="getCouponCode(coupon)">
+														v-on:click="getCouponCode(coupon)"
+														> 
 													COLLECT COUPON
 												</button>
 											</div>

@@ -1,3 +1,7 @@
+a, .btn-link {
+	color: #00AEEF !important;
+}
+
 @font-face {
 	font-family: SegoeFont;
 	src: url('font/Segoe-UI-Font/SEGOEUI.TTF');
@@ -151,10 +155,51 @@ body {
 
 .card {
 	box-shadow: 0 0 10px 0 rgba(100, 100, 100, 0.26);
+	border-radius: 10px;
+	overflow: hidden;
+	text-align: center;
+	padding: 15px;
+}
+
+.card-body {
+	padding: initial;
+}
+
+.btn-custom {
+	border-color: #00AEEF;
+	letter-spacing: 1px;
+	color: #00AEEF;
+	box-shadow: 0px 0px 10px #00000029;
+	width: 100%;
+}
+
+.btn-custom:hover {
+	color: #00AEEF;	
+}
+
+.card-body__copy {
+	font-size: 18px;
+}
+
+.card-body + .card-footer {
+	margin-top: 15px;
+}
+
+.card-brand__logo {
+	width: 60%;
+	margin: 0 auto;
 }
 
 .card-footer {
 	background-color: white;
+	border-top: 1px dotted #00000029;
+	color: #848484;
+	cursor: pointer;
+	padding-bottom: 0;
+}
+
+.metadata {
+	padding-top: 10px;
 }
 
 .opt-link {
@@ -233,4 +278,23 @@ body {
 .footer-image__wrap > img {
 	background-color: #fff;
 	padding: 0;
+}
+
+.box {
+	padding-bottom: 20px;
+}
+
+.btn-link {
+	text-decoration: initial !important;
+}
+
+.verification-heading {
+	display: flex;
+	align-items: center;
+}
+
+.verification-heading .verification-warn-icon {	
+	width: 21px;
+	height: auto;
+	margin-left: 5px;
 }
