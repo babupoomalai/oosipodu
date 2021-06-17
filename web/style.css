@@ -20,7 +20,7 @@ body {
 	background-color: #F9F9F9;
 }
 
-@media only screen and (min-width: 375px) {
+@media only screen and (min-width: 500px) {
 	.container {
 		max-width: 375px;
 	}
@@ -175,32 +175,35 @@ body {
 
 .logo-container {
 	background-color: #fff;
+	padding-top: 40px;
 }
 
 .logo-list {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+  	grid-template-columns: repeat(2, 1fr);
 	padding: 20px 10px;
-	justify-content: space-around;
-	align-items: center;
+	grid-gap: 20px;	
 }
 
-.logo-list img:nth-child(1) {
-	max-height: 32px;
-	margin-bottom: 20px;
+.logo-list__item {
+	margin: auto;
+	max-width: 80px;
 }
 
-.logo-list img:nth-child(2) {
-	max-height: 32px;
-	margin-bottom: 20px;
+.logo-list .logo-list__item:nth-child(1) {
+	max-width: 80px;	
 }
 
-.logo-list img:nth-child(3) {
-	max-height: 60px;
+.logo-list .logo-list__item:nth-child(2) {
+	max-width: 75px;	
 }
 
-.logo-list img:nth-child(4) {
-	max-height: 42px;
+.logo-list .logo-list__item:nth-child(3) {
+	max-width: 120px;
+}
+
+.logo-list .logo-list__item:nth-child(4) {
+	max-width: 85px;
 }
 
 .footer-container {
