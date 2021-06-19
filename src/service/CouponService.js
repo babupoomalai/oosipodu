@@ -6,6 +6,8 @@ exports.getCoupons = async function (store) {
 	let query = `SELECT * from coupon where valid_till >= NOW() AND active = 1 `;
 	if (!_.isEmpty(store)) {
 		query += ` AND store='${store}'`
+	} else {
+		query += ` AND restricted = 0`;
 	}
 	const couponList = await dbutil.query(query);
 	// console.log(`insider getCoupons: ${couponList} ${query}`);

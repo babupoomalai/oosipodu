@@ -1,5 +1,7 @@
 /* global moment, localStorage, history Vue */
 
+import {store} from "../egovernments DIVOC india verification/src/redux/store";
+
 const _ = require('underscore');
 const download = require('./download');
 
@@ -65,8 +67,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			store: function () {
 				var path = window.location.pathname;
 				var page = path.split("/").pop();
-				if ("kumaran.html" === page) {
-					return "kumaran";
+				if ("ijmhss.html" === page) {
+					return "ijmhss";
 				}
 				return null;
 			},
@@ -284,23 +286,59 @@ document.addEventListener('DOMContentLoaded', function () {
 					this.fetchBeneficiaries(dbUser);
 				}
 			},
-			fetchCoupons: async function () {
-				if (this.isVaccinated) {
-					this.coupons = await userService.getCoupons(this.store);
-				}
-
+			registerCouponClick: function () {
 				$('#btnCoupon').click(function () {
-					console.log('downloading')
+					console.log('downloading');
 					let cardElem = this.closest('div.card');
+					let app = $('div#app')[0];
 					const storeName = cardElem.getAttribute('id');
+					$(".card").each(function (index, element) {
+						if ($(element).attr('id') !== storeName) {
+							$(element).attr('data-html2canvas-ignore', true);
+						}
+					});
 
-					html2canvas(cardElem, {
+					html2canvas(app, {
 						onrendered: function (canvas) {
+							// Download as pdf
+							// var pdf = new jsPDF('p', 'mm', 'a4');//A4 paper, portrait
+							//
+							// var ctx = canvas.getContext('2d'),
+							// 	a4w = 190, a4h = 257,//A4 size, 210mm x 297mm, 10 mm margin on each side, display area 190x277
+							// 	imgHeight = Math.floor(a4h * canvas.width / a4w),//Convert pixel height of one page image to A4 display scale
+							// 	renderedHeight = 0;
+							//
+							// var header = document.getElementById('header');
+							// while (renderedHeight < canvas.height) {
+							// 	var page = document.createElement("canvas");
+							// 	page.width = canvas.width;
+							// 	page.height = Math.min(imgHeight, canvas.height - renderedHeight);//Maybe less than one page
+							//
+							// 	//Trim the specified area with getImageData and draw it into the canvas object created earlier
+							// 	page.getContext('2d').putImageData(ctx.getImageData(0, renderedHeight, canvas.width, Math.min(imgHeight, canvas.height - renderedHeight)), 0, 0);
+							// 	//Add an image to the page with a 10 mm / 20 mm margin
+							// 	pdf.addImage(page.toDataURL('image/jpeg', 1.0), 'JPEG', 10, 20, a4w, Math.min(a4h, a4w * page.height / page.width));
+							// 	//Add header logo
+							// 	// pdf.addImage(header, 'PNG', 5, 3);
+							// 	pdf.text("Header", 10, 10);
+							//
+							// 	renderedHeight += imgHeight;
+							// 	if (renderedHeight < canvas.height)
+							// 		pdf.addPage();//Add an empty page if there is more to follow
+							//
+							// 	// delete page;
+							// }
+							// pdf.save('content.pdf');
+
+							// Download as image
 							var tempcanvas = document.createElement('canvas');
-							tempcanvas.width = 465;
-							tempcanvas.height = 524;
+							let width = 351;
+							let height = 238;
+
+							tempcanvas.width = width;
+							tempcanvas.height = height;
 							var context = tempcanvas.getContext('2d');
-							context.drawImage(canvas, 465, 40, 465, 524, 0, 0, 465, 524);
+							context.drawImage(canvas, width, 40, width, height, 0, 0, width, height);
 							var link = document.createElement("a");
 							link.href = canvas.toDataURL('image/jpg');
 							link.download = `${storeName}.jpg`;
@@ -308,8 +346,13 @@ document.addEventListener('DOMContentLoaded', function () {
 						}
 					});
 				});
-			}
-			,
+			},
+			fetchCoupons: async function () {
+				if (this.isVaccinated) {
+					this.coupons = await userService.getCoupons(this.store);
+				}
+				this.registerCouponClick();
+			},
 			fetchBeneficiaries: async function (dbUser) {
 				const beneficiaries = await this.getBeneficiaries();
 				// console.log("be: " + beneficiaries);
@@ -381,6 +424,13 @@ document.addEventListener('DOMContentLoaded', function () {
 					return this.user.dbUser.opt_in;
 				}
 				return false;
+			},
+			getBrandImage: function (store) {
+				if ("clothing" === store) {
+					return "CLOTHING-BRAND.png";
+				} else if ("vegetable" === store) {
+					return "VEGETABLES.png";
+				}
 			}
 		}
 	})
