@@ -174,8 +174,14 @@
 				</div>
 			</div>
 
+			<!--	<footer class="my-5 pt-2 text-center text-muted text-small">-->
+			<!--		</p>-->
+			<!--	</footer>-->
+		</div>
+
+		<div class="row footer-image__wrap">
 			<div class="logo-container"
-				 v-if="!isFinishedProcess || (isFinishedProcess && isAuthenticated)">
+				 v-if="coupons === null">
 				<h2 class="footer-header">Avail discounts from responsible Brands</h2>
 
 				<div class="logo-list">
@@ -196,12 +202,6 @@
 					</div>
 				</div>
 			</div>
-			<!--	<footer class="my-5 pt-2 text-center text-muted text-small">-->
-			<!--		</p>-->
-			<!--	</footer>-->
-		</div>
-
-		<div class="row footer-image__wrap">
 			<img src="img/poster.png" alt="placeholder 960" class="img-fluid w-100"/>
 		</div>
 	</div>
