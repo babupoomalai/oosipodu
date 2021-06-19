@@ -1,7 +1,5 @@
 /* global moment, localStorage, history Vue */
 
-import {store} from "../egovernments DIVOC india verification/src/redux/store";
-
 const _ = require('underscore');
 const download = require('./download');
 
