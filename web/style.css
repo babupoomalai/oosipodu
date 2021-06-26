@@ -174,7 +174,7 @@ body {
 }
 
 .btn-custom:hover {
-	color: #00AEEF;	
+	color: #00AEEF;
 }
 
 .card-body__copy {
@@ -227,7 +227,7 @@ body {
 	display: grid;
   	grid-template-columns: repeat(2, 1fr);
 	padding: 20px 10px;
-	grid-gap: 20px;	
+	grid-gap: 20px;
 }
 
 .logo-list__item {
@@ -236,11 +236,11 @@ body {
 }
 
 .logo-list .logo-list__item:nth-child(1) {
-	max-width: 80px;	
+	max-width: 80px;
 }
 
 .logo-list .logo-list__item:nth-child(2) {
-	max-width: 75px;	
+	max-width: 75px;
 }
 
 .logo-list .logo-list__item:nth-child(3) {
@@ -293,7 +293,7 @@ body {
 	align-items: center;
 }
 
-.verification-heading .verification-warn-icon {	
+.verification-heading .verification-warn-icon {
 	width: 21px;
 	height: auto;
 	margin-left: 5px;

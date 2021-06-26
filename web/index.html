@@ -86,23 +86,30 @@
 
 		<div class="row pt-4">
 			<div class="box" v-if="isAuthenticated">
-				<h4 class="align-items-center d-flex justify-content-between mb-3 h4">
+				<div id="welcomePanel">
+					<h4 class="align-items-center d-flex justify-content-between mb-3 h4">
 						<span>Hello
 							<span v-if="isFinishedProcess">{{ user.name }}</span>!
 						</span>
-					<button type="button" class="btn btn-link"
-							v-on:click="logout()">Logout
-					</button>
-				</h4>
-				<div class="pb-3">Mobile Number: {{ mobile }}</div>
-				<!--					<p class="ml-1">-->
-				<!--						<small class="text-muted" v-if="user.tokenExpiry">expires in-->
-				<!--						{{ user.tokenExpiry }}</small>-->
-				<!--					</p>					-->
+						<button type="button" class="btn btn-link"
+								v-on:click="logout()">Logout
+						</button>
+					</h4>
+					<div class="pb-3">Mobile Number: {{ mobile }}</div>
+					<!--					<p class="ml-1">-->
+					<!--						<small class="text-muted" v-if="user.tokenExpiry">expires in-->
+					<!--						{{ user.tokenExpiry }}</small>-->
+					<!--					</p>					-->
+					<div class="pb-1" v-if="isFinishedProcess">
+						<div class="pb-4" v-if="isAuthenticated && isVaccinated">
+							<p class="vaccinatedPanel"> You are awesome for being vaccinated. These are just for
+								you!</p>
+						</div>
+					</div>
+				</div>
+
 				<div class="pb-1" v-if="isFinishedProcess">
 					<div class="pb-4" v-if="isAuthenticated && isVaccinated">
-						<p class="vaccinatedPanel"> You are awesome for being vaccinated. These are just for
-							you!</p>
 						<div class="card contest d-none">
 							<div class="card-body">
 								<h3 class="card-title">Oosi Podu Contest</h3>
@@ -152,8 +159,7 @@
 									<div class="card-body">
 										<p class="card-body__copy">{{ coupon.caption }}</p>
 										<div class="input-group mx-auto d-block mt-3">
-											<button type="button" class="btn btn-custom"
-													id="btnCoupon"
+											<button type="button" class="btn btn-custom btnCoupon"
 													v-on:click="getCouponCode(coupon)"
 											>
 												COLLECT COUPON
@@ -179,7 +185,7 @@
 			<!--	</footer>-->
 		</div>
 
-		<div class="row footer-image__wrap">
+		<div class="row footer-image__wrap" id="footer">
 			<div class="logo-container"
 				 v-if="coupons === null">
 				<h2 class="footer-header">Avail discounts from responsible Brands</h2>
@@ -217,7 +223,7 @@
 		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
 		crossorigin></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
 
 <script src="./main.js"></script>
 <script src="./js/index.js"></script>

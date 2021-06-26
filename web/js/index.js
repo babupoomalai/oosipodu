@@ -1,6 +1,8 @@
 /* global moment, localStorage, history Vue */
 
 const _ = require('underscore');
+// import {jsPDF} from "jspdf";
+
 const download = require('./download');
 
 const api = require('./api');
@@ -205,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			getCouponCode: async function (coupon) {
 				// console.log(coupon.coupon_code + "- code");
 				coupon.text = coupon.coupon_code;
-				$(`#${coupon.store} button#btnCoupon`).text(coupon.coupon_code);
+				$(`#${coupon.store} button.btnCoupon`).text(coupon.coupon_code);
 				// const doc = new jsPDF();
 				// const contentHtml = this.$refs.content.innerHTML;
 				// doc.fromHTML(contentHtml, 15, 15, {
@@ -284,63 +286,210 @@ document.addEventListener('DOMContentLoaded', function () {
 					this.fetchBeneficiaries(dbUser);
 				}
 			},
+			onCouponClick: function () {
+				$('.btnCoupon').click(function () {
+					PDFJS.getDocument(url)
+						.then(function (pdf) {
+
+							// Get div#container and cache it for later use
+							var container = document.getElementById("app");
+
+							// Loop from 1 to total_number_of_pages in PDF document
+							for (var i = 1; i <= pdf.numPages; i++) {
+
+								// Get desired page
+								pdf.getPage(i).then(function (page) {
+
+									var scale = 1.5;
+									var viewport = page.getViewport(scale);
+									var div = document.createElement("div");
+
+									// Set id attribute with page-#{pdf_page_number} format
+									div.setAttribute("id", "page-" + (page.pageIndex + 1));
+
+									// This will keep positions of child elements as per our needs
+									div.setAttribute("style", "position: relative");
+
+									// Append div within div#container
+									container.appendChild(div);
+
+									// Create a new Canvas element
+									var canvas = document.createElement("canvas");
+
+									// Append Canvas within div#page-#{pdf_page_number}
+									div.appendChild(canvas);
+
+									var context = canvas.getContext('2d');
+									canvas.height = viewport.height;
+									canvas.width = viewport.width;
+
+									var renderContext = {
+										canvasContext: context,
+										viewport: viewport
+									};
+
+									// Render PDF page
+									page.render(renderContext)
+										.then(function () {
+											// Get text-fragments
+											return page.getTextContent();
+										})
+										.then(function (textContent) {
+											// Create div which will hold text-fragments
+											var textLayerDiv = document.createElement("div");
+
+											// Set it's class to textLayer which have required CSS styles
+											textLayerDiv.setAttribute("class", "textLayer");
+
+											// Append newly created div in `div#page-#{pdf_page_number}`
+											div.appendChild(textLayerDiv);
+
+											// Create new instance of TextLayerBuilder class
+											var textLayer = new TextLayerBuilder({
+												textLayerDiv: textLayerDiv,
+												pageIndex: page.pageIndex,
+												viewport: viewport
+											});
+
+											// Set text-fragments
+											textLayer.setTextContent(textContent);
+
+											// Render text-fragments
+											textLayer.render();
+										});
+								});
+							}
+						});
+				});
+			},
+			generateCanvas: function (elem, pdf, deferred, pdfX, pdfY) {
+				let $this = this;
+
+				html2canvas(elem, {
+					background: '#00AEEF',
+					onrendered: function (canvas) {
+
+						var ctx = canvas.getContext('2d'),
+							a4w = 190, a4h = 257,//A4 size, 210mm x 297mm, 10 mm margin on each side, display area 190x277
+							imgHeight = Math.floor(a4h * canvas.width / a4w),//Convert pixel height of one page image to A4 display scale
+							renderedHeight = 0;
+
+						while (renderedHeight < canvas.height) {
+							var page = document.createElement("canvas");
+							page.width = canvas.width;
+							page.height = Math.min(imgHeight, canvas.height - renderedHeight);//Maybe less than one page
+
+
+							//Trim the specified area with getImageData and draw it into the canvas object created earlier
+							page.getContext('2d').putImageData(ctx.getImageData(0, renderedHeight, canvas.width, Math.min(imgHeight, canvas.height - renderedHeight)), 0, 0);
+							//Add an image to the page with a 10 mm / 20 mm margin
+							let height = Math.min(a4h, a4w * page.height / page.width);
+							// pdf.setFillColor(0, 174, 239, 0);
+							ctx.fillStyle = "#ffffff";
+							// ctx.fillRect($this.pdfX, $this.pdfY, a4w, height, "F");
+							pdf.addImage(page.toDataURL('image/png', 1.0), 'PNG', $this.pdfX, $this.pdfY, a4w, height);
+							$this.pdfY += height;
+
+							renderedHeight += imgHeight;
+							if (renderedHeight < canvas.height)
+								pdf.addPage();//Add an empty page if there is more to follow
+
+						}
+
+						deferred.resolve();
+					}
+				});
+			},
+			registerDownloadPdf: function () {
+				const $this = this;
+
+				$('.btnCoupon').click(function () {
+					var deferreds = [];
+					var options = {'background-color': '#FFFFFF'};
+					var doc = new jsPDF('p', 'pt', 'a4');
+					let cardElem = this.closest('div.card');
+					let welcomePanel = $('#welcomePanel')[0];
+					let header = $('#header')[0]
+					let footer = $('#footer')[0]
+					let divs = [header, cardElem, footer];
+					$this.pdfX = 150, $this.pdfY = 20;
+					for (let i = 0; i < divs.length; i++) {
+						var deferred = $.Deferred();
+						deferreds.push(deferred.promise());
+						let htmlElem = divs[i];
+						$this.generateCanvas(htmlElem, doc, deferred, $this.pdfX, $this.pdfY);
+
+					}
+					$.when.apply($, deferreds).then(function () { // executes after adding all images
+						doc.save(`${cardElem.getAttribute("id")}.pdf`);
+					});
+				});
+			},
 			registerCouponClick: function () {
-				$('#btnCoupon').click(function () {
+				$('.btnCoupon').click(function () {
+					return;
+
 					console.log('downloading');
 					let cardElem = this.closest('div.card');
-					let app = $('div#app')[0];
+					let app = $('#header')[0]
 					const storeName = cardElem.getAttribute('id');
-					$(".card").each(function (index, element) {
-						if ($(element).attr('id') !== storeName) {
-							$(element).attr('data-html2canvas-ignore', true);
-						}
-					});
+					// $(".card").each(function (index, element) {
+					// 	if ($(element).attr('id') !== storeName) {
+					// 		$(element).attr('data-html2canvas-ignore', true);
+					// 	}
+					// });
 
-					html2canvas(app, {
+					html2canvas(cardElem, {
 						onrendered: function (canvas) {
 							// Download as pdf
-							// var pdf = new jsPDF('p', 'mm', 'a4');//A4 paper, portrait
-							//
-							// var ctx = canvas.getContext('2d'),
-							// 	a4w = 190, a4h = 257,//A4 size, 210mm x 297mm, 10 mm margin on each side, display area 190x277
-							// 	imgHeight = Math.floor(a4h * canvas.width / a4w),//Convert pixel height of one page image to A4 display scale
-							// 	renderedHeight = 0;
-							//
-							// var header = document.getElementById('header');
-							// while (renderedHeight < canvas.height) {
-							// 	var page = document.createElement("canvas");
-							// 	page.width = canvas.width;
-							// 	page.height = Math.min(imgHeight, canvas.height - renderedHeight);//Maybe less than one page
-							//
-							// 	//Trim the specified area with getImageData and draw it into the canvas object created earlier
-							// 	page.getContext('2d').putImageData(ctx.getImageData(0, renderedHeight, canvas.width, Math.min(imgHeight, canvas.height - renderedHeight)), 0, 0);
-							// 	//Add an image to the page with a 10 mm / 20 mm margin
-							// 	pdf.addImage(page.toDataURL('image/jpeg', 1.0), 'JPEG', 10, 20, a4w, Math.min(a4h, a4w * page.height / page.width));
-							// 	//Add header logo
-							// 	// pdf.addImage(header, 'PNG', 5, 3);
-							// 	pdf.text("Header", 10, 10);
-							//
-							// 	renderedHeight += imgHeight;
-							// 	if (renderedHeight < canvas.height)
-							// 		pdf.addPage();//Add an empty page if there is more to follow
-							//
-							// 	// delete page;
-							// }
-							// pdf.save('content.pdf');
+							var pdf = new jsPDF('p', 'mm', 'a4');//A4 paper, portrait
+
+							var ctx = canvas.getContext('2d'),
+								a4w = 190, a4h = 257,//A4 size, 210mm x 297mm, 10 mm margin on each side, display area 190x277
+								imgHeight = Math.floor(a4h * canvas.width / a4w),//Convert pixel height of one page image to A4 display scale
+								renderedHeight = 0;
+
+							var header = document.getElementById('header');
+							while (renderedHeight < canvas.height) {
+								var page = document.createElement("canvas");
+								page.width = canvas.width;
+								page.height = Math.min(imgHeight, canvas.height - renderedHeight);//Maybe less than one page
+
+								//Trim the specified area with getImageData and draw it into the canvas object created earlier
+								page.getContext('2d').putImageData(ctx.getImageData(0, renderedHeight, canvas.width, Math.min(imgHeight, canvas.height - renderedHeight)), 0, 0);
+								//Add an image to the page with a 10 mm / 20 mm margin
+								pdf.addImage(page.toDataURL('image/jpeg', 1.0), 'JPEG', 10, 20, a4w, Math.min(a4h, a4w * page.height / page.width));
+								//Add header logo
+								pdf.addImage(header, 'PNG', 5, 3);
+								// pdf.text("Header", 10, 10);
+
+								renderedHeight += imgHeight;
+								if (renderedHeight < canvas.height)
+									pdf.addPage();//Add an empty page if there is more to follow
+
+								// delete page;
+							}
+							pdf.save('content.pdf');
 
 							// Download as image
-							var tempcanvas = document.createElement('canvas');
-							let width = 351;
-							let height = 238;
+							// var tempcanvas = document.createElement('canvas');
+							// let width = 351;
+							// let height = 238;
+							//
+							// tempcanvas.width = width;
+							// tempcanvas.height = height;
+							// var context = tempcanvas.getContext('2d');
+							// context.drawImage(canvas, width, 40, width, height, 0, 0, width, height);
+							// var link = document.createElement("a");
+							// link.href = canvas.toDataURL('image/jpg');
+							// link.download = `${storeName}.jpg`;
+							// link.click();
+							//
+							// // remove attr
+							// $(".card").each(function (index, element) {
+							// 	$(element).removeAttr('data-html2canvas-ignore');
+							// });
 
-							tempcanvas.width = width;
-							tempcanvas.height = height;
-							var context = tempcanvas.getContext('2d');
-							context.drawImage(canvas, width, 40, width, height, 0, 0, width, height);
-							var link = document.createElement("a");
-							link.href = canvas.toDataURL('image/jpg');
-							link.download = `${storeName}.jpg`;
-							link.click();
 						}
 					});
 				});
@@ -349,7 +498,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (this.isVaccinated) {
 					this.coupons = await userService.getCoupons(this.store);
 				}
-				this.registerCouponClick();
+				this.registerDownloadPdf();
 			},
 			fetchBeneficiaries: async function (dbUser) {
 				const beneficiaries = await this.getBeneficiaries();
