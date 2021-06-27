@@ -2,6 +2,7 @@
 
 const _ = require('underscore');
 // import {jsPDF} from "jspdf";
+// const html2canvas = require('html2canvas');
 
 const download = require('./download');
 
@@ -362,42 +363,51 @@ document.addEventListener('DOMContentLoaded', function () {
 						});
 				});
 			},
-			generateCanvas: function (elem, pdf, deferred, pdfX, pdfY) {
+			generateCanvas: function (elem, index, pdf, deferred, pdfX, pdfY) {
 				let $this = this;
 
+				var scrollPos = window.scrollX;
+				// console.log('currentPos: ' + scrollPos);
 				html2canvas(elem, {
-					background: '#00AEEF',
-					onrendered: function (canvas) {
+					scrollY: -window.scrollY,
+				}).then(function (canvas) {
+					// scrollX: 0,
+					// scrollY: -window.scrollY,
+					// dpi: 300,
+					// scale: 3,
 
-						var ctx = canvas.getContext('2d'),
-							a4w = 190, a4h = 257,//A4 size, 210mm x 297mm, 10 mm margin on each side, display area 190x277
-							imgHeight = Math.floor(a4h * canvas.width / a4w),//Convert pixel height of one page image to A4 display scale
-							renderedHeight = 0;
+					var ctx = canvas.getContext('2d'),
+						a4w = 100, a4h = 257,//A4 size, 210mm x 297mm, 10 mm margin on each side, display area 190x277
+						imgHeight = Math.floor(a4h * canvas.width / a4w),//Convert pixel height of one page image to A4 display scale
+						renderedHeight = 0;
 
-						while (renderedHeight < canvas.height) {
-							var page = document.createElement("canvas");
-							page.width = canvas.width;
-							page.height = Math.min(imgHeight, canvas.height - renderedHeight);//Maybe less than one page
+					while (renderedHeight < canvas.height) {
+						var page = document.createElement("canvas");
+						page.width = canvas.width;
+						page.height = Math.min(imgHeight, canvas.height - renderedHeight);//Maybe less than one page
 
 
-							//Trim the specified area with getImageData and draw it into the canvas object created earlier
-							page.getContext('2d').putImageData(ctx.getImageData(0, renderedHeight, canvas.width, Math.min(imgHeight, canvas.height - renderedHeight)), 0, 0);
-							//Add an image to the page with a 10 mm / 20 mm margin
-							let height = Math.min(a4h, a4w * page.height / page.width);
-							// pdf.setFillColor(0, 174, 239, 0);
-							ctx.fillStyle = "#ffffff";
-							// ctx.fillRect($this.pdfX, $this.pdfY, a4w, height, "F");
-							pdf.addImage(page.toDataURL('image/png', 1.0), 'PNG', $this.pdfX, $this.pdfY, a4w, height);
-							$this.pdfY += height;
+						//Trim the specified area with getImageData and draw it into the canvas object created earlier
+						page.getContext('2d').putImageData(ctx.getImageData(0, renderedHeight, canvas.width, Math.min(imgHeight, canvas.height - renderedHeight)), 0, 0);
+						//Add an image to the page with a 10 mm / 20 mm margin
+						let height = Math.min(a4h, a4w * page.height / page.width);
+						// pdf.setFillColor(0, 174, 239, 0);
+						ctx.fillStyle = "#ffffff";
+						// ctx.fillRect($this.pdfX, $this.pdfY, a4w, height, "F");
+						var w1 = pdf.internal.pageSize.width;
+						var h1 = pdf.internal.pageSize.height;
+						// console.log(`${$this.pdfY} w:${w1} h1:${h1} h:${height}`);
+						pdf.addImage(page.toDataURL('image/png', 1.0), 'PNG', $this.pdfX, $this.pdfY, a4w, height);
+						$this.pdfY += height;
 
-							renderedHeight += imgHeight;
-							if (renderedHeight < canvas.height)
-								pdf.addPage();//Add an empty page if there is more to follow
+						renderedHeight += imgHeight;
+						if (renderedHeight < canvas.height)
+							pdf.addPage();//Add an empty page if there is more to follow
 
-						}
-
-						deferred.resolve();
 					}
+					// console.log('currentPos: ' + scrollPos);
+					// window.scrollTo(0, scrollPos);
+					deferred.resolve();
 				});
 			},
 			registerDownloadPdf: function () {
@@ -406,18 +416,19 @@ document.addEventListener('DOMContentLoaded', function () {
 				$('.btnCoupon').click(function () {
 					var deferreds = [];
 					var options = {'background-color': '#FFFFFF'};
-					var doc = new jsPDF('p', 'pt', 'a4');
+					var doc = new jsPDF('p', 'mm', 'a4');
 					let cardElem = this.closest('div.card');
 					let welcomePanel = $('#welcomePanel')[0];
 					let header = $('#header')[0]
 					let footer = $('#footer')[0]
 					let divs = [header, cardElem, footer];
-					$this.pdfX = 150, $this.pdfY = 20;
+					$this.pdfX = 50, $this.pdfY = 5;
+					// $('html,body').scrollTop(0); // Take your <div> / html at top position before calling html2canvas
 					for (let i = 0; i < divs.length; i++) {
 						var deferred = $.Deferred();
 						deferreds.push(deferred.promise());
 						let htmlElem = divs[i];
-						$this.generateCanvas(htmlElem, doc, deferred, $this.pdfX, $this.pdfY);
+						$this.generateCanvas(htmlElem, i, doc, deferred, $this.pdfX, $this.pdfY);
 
 					}
 					$.when.apply($, deferreds).then(function () { // executes after adding all images
