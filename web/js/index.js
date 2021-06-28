@@ -1,7 +1,7 @@
 /* global moment, localStorage, history Vue */
 
 const _ = require('underscore');
-// import {jsPDF} from "jspdf";
+import {jsPDF} from "jspdf";
 // const html2canvas = require('html2canvas');
 
 const download = require('./download');
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			generateCanvas: function (elem, index, pdf, deferred, pdfX, pdfY) {
 				let $this = this;
 
-				var scrollPos = window.scrollX;
+				var scrollPos = window.scrollY;
 				// console.log('currentPos: ' + scrollPos);
 				html2canvas(elem, {
 					scrollY: -window.scrollY,
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					}
 					// console.log('currentPos: ' + scrollPos);
-					// window.scrollTo(0, scrollPos);
+					window.scrollTo(0, scrollPos);
 					deferred.resolve();
 				});
 			},
