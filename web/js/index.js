@@ -26,6 +26,8 @@ function resetUser() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+	const RESEND_OTP_TIMER = 180;
+
 	const app = new Vue({
 		el: '#app',
 		data: {
@@ -170,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				immediate: true // This ensures the watcher is triggered upon creation
 			},
 			otpSuccessVisible: function () {
-				setTimeout(() => this.otpSuccessVisible = false, 5000);
+				setTimeout(() => this.otpSuccessVisible = false, (RESEND_OTP_TIMER - 2) * 1000);
 			}
 		},
 		methods: {
@@ -262,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					this.user.otpId = json.txnId
 					this.user.waitingForOTP = true
 					this.sendOTPSuccess = `OTP sent successfully to ${this.mobile}`
-					this.timerCount = 180;
+					this.timerCount = RESEND_OTP_TIMER;
 					this.otpSuccessVisible = true;
 				} else {
 					this.sendOTPError = 'Failed to send OTP. Please try again'

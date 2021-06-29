@@ -79,11 +79,11 @@
 								   v-model.trim="user.otp"
 								   v-on:keyup.enter="validateOTP()">
 							<div class="input-group pt-3 text-center d-block">
-								<div v-if="timerCount">
+								<div v-if="timerCount" class="mb-2">
 									<p class="text-success">{{ timerCount }} secs</p>
 								</div>
-								<div v-else>
-									<button type="button" class="btn btn-link" @click="sendOTP()">Resend</button>
+								<div v-else class="mb-2">
+									<span class="btn btn-light" @click="sendOTP()">Resend</span>
 								</div>
 
 								<button type="submit" class="btn btn-secondary get-otp-button"
